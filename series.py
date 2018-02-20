@@ -144,7 +144,35 @@ nl5 = ee.ImageCollection("LANDSAT/LT05/C01/T1_TOA")
 nl7 = ee.ImageCollection("LANDSAT/LE07/C01/T1_TOA")
 nl8 = ee.ImageCollection("LANDSAT/LC08/C01/T1_TOA")
 
+def vhi(img):
+	property_list = ['system:index','system:time_start', 'system:time_end']
 
+	brightness_temp=ee.Image(img).select("SR").multiply(0.1)
+
+
+
+	ndvi = ee.Image(img).normalizedDifference(["nir", "red"]).rename("NDVI")
+
+
+	BT_max=ee.Image(brightness_temp).reduce(ee.Reducer.max())
+
+	BT_min=ee.Image(brightness_temp).reduce(ee.Reducer.min())
+
+	tci=ee.Image(BT_max).subtract(brightness_temp).multiply(100).divide(ee.Image(BT_max).subtract(BT_min))
+
+
+
+	ndvi_min=ee.Image(ndvi).reduceRegion(ee.Reducer.min(),region_Gh,3000).get("NDVI")
+
+	ndvi_max= ee.Image(ndvi).reduceRegion(ee.Reducer.max(),region_Gh,3000).get("NDVI")
+
+	vci=ee.Image(ndvi).subtract(ee.Number(ndvi_min)).multiply(100).divide(ee.Number(ndvi_max).subtract(ee.Number(ndvi_min)))
+
+
+	VHI= ee.Image(vci).multiply(0.5).add(ee.Image(tci).multiply(0.5))
+
+	VHI_I = VHI.rename("VHI")
+	return VHI_I.copyProperties(img, property_list)
 
 def lst5(img):
 	property_list = ['system:index','system:time_start', 'system:time_end']
@@ -437,30 +465,40 @@ def timelapse_data(options):
 		notes="Precipitation  TimeSeries"
 		return get_time_series(options,selected_Precipitation,region,notes)
 	elif indices=="vhi":
+
+		if satelite=="avhrr":
 		
-		collection = ee.ImageCollection('NOAA/CDR/AVHRR/NDVI/V4').select('NDVI').filterDate(start_date,end_date).filterBounds(region_Gh.goemetry()).mean()
+			collection = ee.ImageCollection('NOAA/CDR/AVHRR/NDVI/V4').select('NDVI').filterDate(start_date,end_date).filterBounds(region_Gh.goemetry()).mean()
 		
-		#select ndvi
-		selected_ndvi = ee.Image(collection).multiply(0.0001)
+			#select ndvi
+			selected_ndvi = ee.Image(collection).multiply(0.0001)
+			Brightness_Temp = ee.ImageCollection('NOAA/CDR/AVHRR/SR/V4').select('BT_CH4').filterDate(start_date,end_date).filterBounds(region_Gh.goemetry()).mean()
+
+			selected_bt = ee.Image(Brightness_Temp).multiply(0.01)
+			# Normalize THe NDVI
+			min = ee.Image(selected_ndvi).reduceRegion(ee.Reducer.min(), region_Gh, 3000).getInfo()['NDVI']
+			max = ee.Image(selected_ndvi).reduceRegion(ee.Reducer.max(), region_Gh, 3000).getInfo()['NDVI']
+			VCI = ee.Image(selected_ndvi).subtract(ee.Number(min)).multiply(100).divide(ee.Number(max).subtract(ee.Number(min)))
+			bt_min = ee.Image(selected_bt).reduceRegion(ee.Reducer.min(), region_Gh, 3000).getInfo().get("BT_CH4")
+
+			bt_max = ee.Image(selected_bt).reduceRegion(ee.Reducer.max(), region_Gh, 3000).getInfo().get("BT_CH4")
+
+			TCI = selected_bt.subtract(ee.Number(bt_max)).multiply(-100).divide(ee.Number(bt_max).subtract(bt_min))
+			notes="Vegetation Health Index TimeSeries"
+			VHI = VCI.multiply(0.5).add(TCI.multiply(0.5))
+			print(ee.ImageCollection(VHI).getInfo())
+		elif satelite=="landsat":
+
+			l5images = ee.ImageCollection(nl5.combine(btl5).filterBounds(region_Gh.geometry())).map(cloudfunction).select(["B4","B3","SR"],["nir","red","SR"]).map(vhi)
+			l7images = ee.ImageCollection(nl7.combine(btl7).filterBounds(region_Gh.geometry())).map(cloudfunction).select(["B4","B3","SR"],["nir","red","SR"]).map(vhi)
+			l8images = ee.ImageCollection(nl8.combine(btl8).filterBounds(region_Gh.geometry())).map(cloudfunction).select(["B5","B4","SR"],["nir","red","SR"]).map(vhi)
+
+			total_col=ee.ImageCollection(ee.ImageCollection(l5images).merge(l7images)).merge(l8images)
+
+			VHI= ee.ImageCollection(total_col).filterDate(start_date,end_date)
 
 
-
-		Brightness_Temp = ee.ImageCollection('NOAA/CDR/AVHRR/SR/V4').select('BT_CH4').filterDate(start_date,end_date).filterBounds(region_Gh.goemetry()).mean()
-
-		selected_bt = ee.Image(Brightness_Temp).multiply(0.01)
-	# Normalize THe NDVI
-		min = ee.Image(selected_ndvi).reduceRegion(ee.Reducer.min(), region_Gh, 3000).getInfo()['NDVI']
-		max = ee.Image(selected_ndvi).reduceRegion(ee.Reducer.max(), region_Gh, 3000).getInfo()['NDVI']
-		VCI = ee.Image(selected_ndvi).subtract(ee.Number(min)).multiply(100).divide(ee.Number(max).subtract(ee.Number(min)))
-		bt_min = ee.Image(selected_bt).reduceRegion(ee.Reducer.min(), region_Gh, 3000).getInfo().get("BT_CH4")
-
-		bt_max = ee.Image(selected_bt).reduceRegion(ee.Reducer.max(), region_Gh, 3000).getInfo().get("BT_CH4")
-
-		TCI = selected_bt.subtract(ee.Number(bt_max)).multiply(-100).divide(ee.Number(bt_max).subtract(bt_min))
-		notes="Vegetation Health Index TimeSeries"
-		VHI = VCI.multiply(0.5).add(TCI.multiply(0.5))
-		print(ee.ImageCollection(VHI).getInfo())
-		return get_time_series(options,VHI,region,notes)	
+		return get_time_series(options,ee.ImageCollection(VHI),region,notes)	
 	elif indices=="lst":
 		if satelite=="modis":
 			collection = ee.ImageCollection('MODIS/006/MOD11A2').select('LST_Day_1km').filterDate(start_date,end_date).filterBounds(region_Gh.goemetry()).map(lst_map)

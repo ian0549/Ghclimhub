@@ -375,23 +375,29 @@ nl8 = ee.ImageCollection("LANDSAT/LC08/C01/T1_TOA")
 def vhi(img):
 	property_list = ['system:index','system:time_start', 'system:time_end']
 
-	brightness_temp = ee.Image(img).select("SR").multiply(0.1) 
+	brightness_temp=ee.Image(img).select("SR").multiply(0.1)
 
-	ndvi = ee.Image(img).normalizedDifference(["nir", "red"])
 
-	BT_max = ee.Image(brightness_temp).reduce(ee.Reducer.max())
 
-	BT_min = ee.Image(brightness_temp).reduce(ee.Reducer.min())
+	ndvi = ee.Image(img).normalizedDifference(["nir", "red"]).rename("NDVI")
 
-	ndvi_min = ee.Image(ndvi).reduce(ee.Reducer.min())
 
-	ndvi_max = ee.Image(ndvi).reduce(ee.Reducer.max())
+	BT_max=ee.Image(brightness_temp).reduce(ee.Reducer.max())
 
-	vci = ee.Image(ndvi).subtract(ndvi_min).multiply(100).divide(ee.Image(ndvi_max).subtract(ndvi_min))
+	BT_min=ee.Image(brightness_temp).reduce(ee.Reducer.min())
 
-	tci = ee.Image(BT_max).subtract(brightness_temp).multiply(100).divide(BT_max.subtract(BT_min))
+	tci=ee.Image(BT_max).subtract(brightness_temp).multiply(100).divide(ee.Image(BT_max).subtract(BT_min))
 
-	VHI = ee.Image(vci).multiply(0.5).add(tci.multiply(0.5))
+
+
+	ndvi_min=ee.Image(ndvi).reduceRegion(ee.Reducer.min(),region_Gh,3000).get("NDVI")
+
+	ndvi_max= ee.Image(ndvi).reduceRegion(ee.Reducer.max(),region_Gh,3000).get("NDVI")
+
+	vci=ee.Image(ndvi).subtract(ee.Number(ndvi_min)).multiply(100).divide(ee.Number(ndvi_max).subtract(ee.Number(ndvi_min)))
+
+
+	VHI= ee.Image(vci).multiply(0.5).add(ee.Image(tci).multiply(0.5))
 
 	VHI_I = VHI.rename("VHI")
 	return VHI_I.copyProperties(img, property_list)
@@ -756,7 +762,7 @@ def precipitation(options):
 
 		vizAnomaly = {
 		'min':min, 'max':max, 
-		'palette': ','.join(['#d73027','#f46d43','#fdae61','#fee090','#e0f3f8','#abd9e9','#74add1','#4575b4'])
+		'palette': ','.join(['#ef0404','#ff7700','#ffee00','#52f904','#087702'])
 	  }
 		notes = "PRECIPITATION calculated" + " for  " + str(date_year) + "-" + str(date_month)
 		mapid = ee.Image(selected_Precipitation).clip(region_Gh).getMapId(vizAnomaly)
@@ -1096,7 +1102,7 @@ def VHI(options):
 		vhi_max = ee.Image(VHI).reduceRegion(ee.Reducer.max(), region_Gh, 3000).getInfo()['NDVI']
 		vizAnomaly = {
 		'min':vhi_min, 'max':vhi_max, 
-		'palette': ','.join(['#b35806','#e08214','#fdb863','#fee0b6','#d8daeb','#b2abd2','#8073ac','#542788'])
+		'palette': ','.join(['#087702','#52f904','#ffee00','#ff7700','#ef0404'])
 	  }
 		
 
@@ -1131,13 +1137,13 @@ def VHI(options):
 	
 		vizAnomaly = {
 		'min':vhi_min, 'max':vhi_max, 
-		'palette': ','.join(['#b35806','#e08214','#fdb863','#fee0b6','#d8daeb','#b2abd2','#8073ac','#542788'])
+		'palette': ','.join(['#087702','#52f904','#ffee00','#ff7700','#ef0404'])
 	  }
 		
 
 	notes = "VEGETATION HEALTH INDEX calculated from NOAA/CDR/AVHRR data" + " for  " + str(date_year) + "-" + str(date_month)
 	mapid = ee.Image(VHI).clip(region_Gh).getMapId(vizAnomaly)
-	col = {'mapid':mapid['mapid'],'token':mapid['token'] ,'note':notes , 'type':'vhi','min':min,'max':max }
+	col = {'mapid':mapid['mapid'],'token':mapid['token'] ,'note':notes , 'type':'vhi','min':vhi_min,'max':vhi_max }
 	return col
 
 
