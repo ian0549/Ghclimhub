@@ -377,8 +377,8 @@ nl8 = ee.ImageCollection("LANDSAT/LC08/C01/T1_TOA")
 #============================
 
 def getData(collection,geometry,scale,name):
-	path=collection.getDownloadUrl({
-		'name': name,
+	path=ee.Image(collection).getDownloadUrl({
+		'name':str(name),
 		'scale':scale,
 		'crs':'EPSG:4326',
 		'region':str( geometry )
@@ -621,7 +621,7 @@ def ndwi_anomaly(options):
 
 	
 		elif satelite == "landsat":
-			scale=30
+			scale=250
 
 			#   filter on date and bounds
 			l5images = nl5.filterBounds(region_Gh.geometry()).map(cloudfunction).select(["B2","B4"],["green","nir"]).map(ndwi)
@@ -705,7 +705,7 @@ def ndwi_anomaly(options):
 	  }
 		notes = "NORMALIZED DIFFERENCE WATER INDEX ANOMALY calculated" + " for  " + str(date_year) + "-" + str(date_month)
 		name=notes
-		download= getData(NDWI_anom,region_Gh.geometry(),scale,name)
+		download= getData(NDWI_anom,str(region_Gh.geometry().getInfo()['coordinates']),scale,"NDWI Anomaly"+ str(date_year) + "-" + str(date_month))
 		mapid = ee.Image(NDWI_anom).clip(region_Gh).getMapId(vizAnomaly)
 		col = {'mapid':mapid['mapid'],'token':mapid['token'],'note':notes ,'type':'ndwi_anomaly' ,'min':min,'max':max }
 		col['download_data']=download 
@@ -787,8 +787,8 @@ def precipitation(options):
 	  }
 		notes = "PRECIPITATION calculated" + " for  " + str(date_year) + "-" + str(date_month)
 		name=notes
-		scale=1000
-		download= getData(selected_Precipitation,region_Gh.geometry(),scale,name)
+		scale=600
+		download= getData(selected_Precipitation,str(region_Gh.geometry().getInfo()['coordinates']),scale,"Precipitation" + str(date_year) + "-" + str(date_month))
 		mapid = ee.Image(selected_Precipitation).clip(region_Gh).getMapId(vizAnomaly)
 		col = {'mapid':mapid['mapid'],'token':mapid['token'],'note':notes,'type':'precipitation','min':min,'max':max }
 		col['download_data']=download 
@@ -865,7 +865,7 @@ def ndvi_anomaly(options):
 			collection = ee.ImageCollection('MODIS/006/MOD13Q1').select('NDVI').filterDate(startdate,enddate).filterBounds(region_Gh)
 
 		elif satelite == "landsat":
-			scale=30
+			scale=250
 
 			l5images = nl5.filterBounds(region_Gh.geometry()).map(cloudfunction).select(["B4","B3"],["nir","red"]).map(ndvi)
 			l7images = nl7.filterBounds(region_Gh.geometry()).map(cloudfunction).select(["B4","B3"],["nir","red"]).map(ndvi)
@@ -1003,7 +1003,7 @@ def ndvi_anomaly(options):
 	  }
 		notes = "NORMALIZED DIFFERENCE VEGETATION INDEX ANOMALY calculated" + " for  " + str(date_year) + "-" + str(date_month)
 		name=notes
-		download= getData(ndvi_anom,region_Gh.geometry(),scale,name)
+		download= getData(ndvi_anom,str(region_Gh.geometry().getInfo()['coordinates']),scale,"NDVI Anomaly"+ str(date_year) + "-" + str(date_month))
 		mapid = ee.Image(ndvi_anom).clip(region_Gh).getMapId(vizAnomaly)
 		col = {'mapid':mapid['mapid'],'token':mapid['token'],'note':notes ,'type':'ndvi_anomaly' ,'min':min,'max':max }
 		col['download_data']=download 
@@ -1047,7 +1047,7 @@ def VHI(options):
 
 
 	if satelite=="avhrr":
-		scale=5000
+		scale=600
 		# make a list with years
 		year = date_year
 
@@ -1120,7 +1120,7 @@ def VHI(options):
 		
 
 	elif satelite=="landsat":
-		scale=30
+		scale=250
 		# make a list with years
 		year = date_year
 
@@ -1156,7 +1156,7 @@ def VHI(options):
 
 	notes = "VEGETATION HEALTH INDEX calculated from NOAA/CDR/AVHRR data" + " for  " + str(date_year) + "-" + str(date_month)
 	name=notes
-	download= getData(VHI,region_Gh.geometry(),scale,name)
+	download= getData(VHI,str(region_Gh.geometry().getInfo()['coordinates']),scale,"VHI" + str(date_year) + "-" + str(date_month))
 	mapid = ee.Image(VHI).clip(region_Gh).getMapId(vizAnomaly)
 	col = {'mapid':mapid['mapid'],'token':mapid['token'] ,'note':notes , 'type':'vhi','min':vhi_min,'max':vhi_max }
 	col['download_data']=download 
@@ -1168,6 +1168,8 @@ def VHI(options):
 
 def lst_map(img):
 	return img.multiply(0.02).subtract(273.15).copyProperties(img,['system:time_start','syst em:time_end'])
+
+
 
 
 #===========================================
@@ -1243,7 +1245,7 @@ def LST(options):
 	elif satelite=="landsat":
 	# make a list with years
 		year = date_year
-		scale=30
+		scale=250
 		month = date_month
 
 		endingInDays = monthrange(date_year,month)[1]
@@ -1277,7 +1279,8 @@ def LST(options):
 
 	notes = "LAND SURFACE TEMPERATURE calculated" + " for  " + str(date_year) + "-" + str(date_month)
 	name=notes
-	download= getData(selected_LST,region_Gh.geometry(),scale,name)
+	download= getData(selected_LST,region_Gh.geometry().getInfo()['coordinates'],scale,"LST"+ str(date_year) + "-" + str(date_month))
+	print(download)
 	col = {'mapid':mapid['mapid'],'token':mapid['token'] ,'note':notes, 'type':'lst','min':min,'max':max }
 	col['download_data']=download 
 	return col
@@ -1429,10 +1432,10 @@ def SMI(options):
 				   '#800000'])
 	  }
 		notes = "SOIL MOISTURE INDEX calculated" + " for  " + str(date_year) + "-" + str(date_month)
-		scale=250
+		scale=300
 		name=notes
 		mapid = ee.Image(SMI).clip(region_Gh).getMapId(vizAnomaly)
-		download= getData(SMI,region_Gh.geometry(),scale,name)
+		download= getData(SMI,str(region_Gh.geometry().getInfo()['coordinates']),scale,"SMI"+ str(date_year) + "-" + str(date_month))
 		col = {'mapid':mapid['mapid'],'token':mapid['token'] , 'note':notes,'type':'smi' ,'min':min,'max':max }
 		col['download_data']=download 
 		return col
@@ -1717,7 +1720,7 @@ def spi(options):
 		notes = "Standardized Precipitation Index calculated" + " for  " + str(date_year) + "-" + str(date_month)
 		scale=1000
 		name=notes
-		download= getData(SPI_exp,region_Gh.geometry(),scale,name)
+		download= getData(SPI_exp,str(region_Gh.geometry().getInfo()['coordinates']),scale,"SPI"+ str(date_year) + "-" + str(date_month))
 		mapid = ee.Image(SPI_exp).clip(region_Gh).getMapId(vizAnomaly)
 		col = {'mapid':mapid['mapid'],'token':mapid['token'],'note':notes ,'type':'spi' ,'min':min,'max':max }
 		col['download_data']=download 

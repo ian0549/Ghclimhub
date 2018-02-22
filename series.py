@@ -396,9 +396,9 @@ def timelapse_data(options):
 
 			#calculate ndwi for each image in imagecollection
 			l578NDVI = ee.ImageCollection(ee.ImageCollection(l5images).merge(l7images)).merge(l8images)
-			ndvi_mean = ee.ImageCollection(l578NDVI).reduce(ee.Reducer.mean())
+			ndvi_mean = ee.ImageCollection(l578NDVI).mean().reduce(ee.Reducer.mean())
 
-			ndvi_std = ee.ImageCollection(l578NDVI).reduce(ee.Reducer.stdDev())
+			ndvi_std = ee.ImageCollection(l578NDVI).mean().reduce(ee.Reducer.stdDev())
 			def h(img): return ee.Image(img).subtract(ndvi_mean).divide(ndvi_std)
 
 			selected_year_month_data =ee.ImageCollection( ee.ImageCollection(l578NDVI).filterDate(start_date,end_date).map(h))
@@ -429,9 +429,10 @@ def timelapse_data(options):
 			collection = ee.ImageCollection('MODIS/MCD43A4_006_NDWI').filterDate('2000-01-01','2018-12-31').filterBounds(region_Gh.goemetry())
 			notes="Normalized Difference Water Index Anomaly TimeSeries"
 
-			ndwi_mean = ee.ImageCollection(collection).reduce(ee.Reducer.mean())
-			ndwi_std = ee.ImageCollection(collection).reduce(ee.Reducer.stdDev())
-			def h(img): return ee.Image(img).subtract(ndvi_mean).divide(ndvi_std).rename('NDWI')
+			ndwi_mean = ee.ImageCollection(collection).mean().reduce(ee.Reducer.mean())
+			ndwi_std = ee.ImageCollection(collection).mean().reduce(ee.Reducer.stdDev())
+			print(ndwi_std)
+			def h(img): return ee.Image(img).subtract(ndwi_mean).divide(ndwi_std).rename('NDWI')
 			selected_NDWI = ee.ImageCollection(collection).filterDate(start_date,end_date).map(h)
 			NDWI_anom = ee.ImageCollection(selected_NDWI).select(['NDWI'])
 			return get_time_series(options,NDWI_anom,region,notes)	
@@ -449,7 +450,7 @@ def timelapse_data(options):
 			ndwi_mean = ee.ImageCollection(ee.ImageCollection(l5images).merge(l7images)).merge(l8images)
 
 			ndwi_std = ee.ImageCollection(l578NDWI).reduce(ee.Reducer.stdDev())
-			def h(img): return ee.Image(img).subtract(ndvi_mean).divide(ndvi_std).rename('NDWI')
+			def h(img): return ee.Image(img).subtract(ndwi_mean).divide(ndwi_std).rename('NDWI')
 			selected_year_month_data = ee.ImageCollection(l578NDWI).filterDate(start_date,end_date).map(h)
 			NDWI_anom =ee.ImageCollection(selected_year_month_data ).select('NDWI')
 
