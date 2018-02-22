@@ -27,6 +27,7 @@ urlpatterns = [
 	url(r'^download_data', app.views.download_data, name='download_data'),
 	url(r'^chart_data', app.views.chart_data, name='chart_data'),
 	url(r'^indices_compute', app.views.indices_compute, name='indices_compute'),
+	url(r'^indices_download', app.views.indices_download, name='indices_download'),
 	url(r'^map1', app.views.map1, name='map1'),	
 	url(r'^map2', app.views.map2, name='map2'),
 	url(r'^map3', app.views.map3, name='map3'),

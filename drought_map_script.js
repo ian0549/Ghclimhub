@@ -5,7 +5,7 @@ $(document).ready(function () {
 	$("#legend").hide();
 	});
 var palete = {
-	'ndvi_anomaly': ["87000A", "7C3E28", "EC712C", "FABF45", "FFFFFF", "51FF78", "3DCF4C", "215229", "0B260B"], 'ndwi_anomaly': ['#b2182b', '#ef8a62', '#fddbc7', '#f7f7f7', '#d1e5f0', '#67a9cf', '#2166ac'], 'vhi': ['#087702', '#52f904', '#ffee00', '#ff7700', '#ef0404'], 'smi': ['#730000', '#E60000', '#FFAA00', '#FCD37F', '#FFFF00', '#FFFFFF', '#AAFF55', '#00FFFF', '#00AAFF', '#0000FF', '#0000AA'], 'lst': ["0000ff", "32cd32", "ffff00", "ff8c00", "#e20000 "], 'precipitation': ['#ef0404', '#ff7700', '#ffee00', '#52f904', '#087702'], 'spi': ['#730000', '#E60000', '#FFAA00', '#FCD37F', '#FFFF00', '#FFFFFF', '#AAFF55', '#00FFFF', '#00AAFF', '#0000FF', '#0000AA']
+	'ndvi_anomaly': ["87000A", "7C3E28", "EC712C", "FABF45", "FFFFFF", "51FF78", "3DCF4C", "215229", "0B260B"], 'ndwi_anomaly': ['#b2182b', '#ef8a62', '#fddbc7', '#f7f7f7', '#d1e5f0', '#67a9cf', '#2166ac'], 'vhi': ['#087702', '#52f904', '#ffee00', '#ff7700', '#ef0404'], 'smi': ['#730000', '#E60000', '#FFAA00', '#FCD37F', '#FFFF00', '#FFFFFF', '#AAFF55', '#00FFFF', '#00AAFF', '#0000FF', '#0000AA'], 'lst': ["0000ff", "32cd32", "ffff00", "ff8c00", "#e20000 "], 'precipitation': ['#d73027', '#f46d43', '#fdae61', '#fee090', '#e0f3f8', '#abd9e9', '#74add1', '#4575b4'], 'spi': ['#730000', '#E60000', '#FFAA00', '#FCD37F', '#FFFF00', '#FFFFFF', '#AAFF55', '#00FFFF', '#00AAFF', '#0000FF', '#0000AA']
 }
 
 
