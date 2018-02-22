@@ -311,23 +311,30 @@ def cloudfunction(img):
 
 
 # calculate ndvi 
-def ndvi(img):
-  property_list = ['system:index','system:time_start', 'system:time_end']
-  ndvi = img.normalizedDifference(["nir", "red"]).rename(["NDVI"]).copyProperties(img, property_list)
-  return ndvi
-
-def ndwi(img):
+def ndvi_anom(img):
+	mean= 0.33004655922067055
+	std =0.11068838329126819
 	property_list = ['system:index','system:time_start', 'system:time_end']
-	return img.normalizedDifference(["green", "nir"]).rename("NDWI").copyProperties(img, property_list)
+	ndvi = img.normalizedDifference(["nir", "red"])
+	ndvi_anom=ee.Image(ndvi).subtract(ee.Number(mean)).divide(ee.Number(std)).rename(["NDVI"]).copyProperties(img, property_list)
+	return ndvi_anom
+
+def ndwi_anom(img):
+	mean=-0.2990153174811877
+	std= 0.1001232100835506
+	property_list = ['system:index','system:time_start', 'system:time_end']
+	ndwi=img.normalizedDifference(["green", "nir"])
+	ndwi_anom=ee.Image(ndwi).subtract(ee.Number(mean)).divide(ee.Number(std))
+
+	return ee.Image(ndwi_anom).rename("NDWI").copyProperties(img, property_list)
+
+
 
 
 
 global ndwi_mean,ndwi_std
 
 
-def anomaly_ndwi(img):
-
-	return ee.Image(img).subtract(ndwi_mean).divide(ndwi_std)
 
 
 
@@ -371,153 +378,60 @@ def timelapse_data(options):
 
 
 	if indices=="ndvi anomaly":
-
-		if satelite=="modis":
-			collection = ee.ImageCollection('MODIS/006/MOD13Q1').select('NDVI').filterDate(start_date,end_date).filterBounds(region_Gh.goemetry())
-
-			ndvi_mean = ee.Image(ee.ImageCollection(collection).reduce(ee.Reducer.mean()))
-			ndvi_std = ee.Image(ee.ImageCollection(collection).reduce(ee.Reducer.stdDev()))
-			def h(img): return ee.Image(img).subtract(ndvi_mean).divide(ndvi_std).rename('NDVI')
-			selected_ndvi = ee.ImageCollection(collection).filterDate(start_date,end_date).map(h)
-
-			nvi_anom =selected_ndvi
-
-			notes="Normalized Difference Vegetation Index Anomaly TimeSeries"
-			get_data=ee.ImageCollection(ndvi_anom).get('NDVI')
-			return get_time_series(options,get_data,region,notes)
-	
-		elif satelite == "landsat":
-			#   filter on date and bounds
-
-			l5images = nl5.filterBounds(region_Gh.geometry()).map(cloudfunction).select(["B4","B3"],["nir","red"]).map(ndvi)
-			l7images = nl7.filterBounds(region_Gh.geometry()).map(cloudfunction).select(["B4","B3"],["nir","red"]).map(ndvi)
-			l8images = nl8.filterBounds(region_Gh.geometry()).map(cloudfunction).select(["B5","B4"],["nir","red"]).map(ndvi)
+		l5images = nl5.filterBounds(region_Gh.geometry()).map(cloudfunction).select(["B4","B3"],["nir","red"]).map(ndvi_anom)
+		l7images = nl7.filterBounds(region_Gh.geometry()).map(cloudfunction).select(["B4","B3"],["nir","red"]).map(ndvi_anom)
+		l8images = nl8.filterBounds(region_Gh.geometry()).map(cloudfunction).select(["B5","B4"],["nir","red"]).map(ndvi_anom)
 
 
-			#calculate ndwi for each image in imagecollection
-			l578NDVI = ee.ImageCollection(ee.ImageCollection(l5images).merge(l7images)).merge(l8images)
-			ndvi_mean = ee.ImageCollection(l578NDVI).mean().reduce(ee.Reducer.mean())
+		#calculate ndwi for each image in imagecollection
+		l578NDVI = ee.ImageCollection(ee.ImageCollection(l5images).merge(l7images)).merge(l8images)
+		selected_year_month_data = ee.ImageCollection(l578NDVI).filterDate(start_date,end_date)
 
-			ndvi_std = ee.ImageCollection(l578NDVI).mean().reduce(ee.Reducer.stdDev())
-			def h(img): return ee.Image(img).subtract(ndvi_mean).divide(ndvi_std)
-
-			selected_year_month_data =ee.ImageCollection( ee.ImageCollection(l578NDVI).filterDate(start_date,end_date).map(h))
-
-			notes="Normalized Difference Vegetation Index Anomaly TimeSeries"						
-			return get_time_series(options,selected_year_month_data,region,notes)		
-		elif satelite == "avhrr":
-
-			collection = ee.ImageCollection('NOAA/CDR/AVHRR/NDVI/V4').select('NDVI').filterDate('1982-01-01','2018-12-31').filterBounds(region_Gh.goemetry())
-
-	
-
-
-			ndvi_mean = ee.Image(ee.ImageCollection(collection).reduce(ee.Reducer.mean())).multiply(0.0001)
-			ndvi_std = ee.Image(ee.ImageCollection(collection).reduce(ee.Reducer.stdDev())).multiply(0.0001)
-			def h(img): return ee.Image(img).subtract(ndvi_mean).divide(ndvi_std).rename('NDVI')
-			selected_ndvi = ee.ImageCollection(collection).map(h)
-
-			ndvi_anom =ee.ImageCollection(selected_ndvi).get('NDVI')
-			get_data=ndvi_anom
-			notes="Normalized Difference Vegetation Index Anomaly TimeSeries"
-			return get_time_series(options,get_data,region,notes)
-
+		notes="Normalized Difference Vegetation Index Anomaly TimeSeries"						
+		return get_time_series(options,selected_year_month_data,region,notes)		
 			
 	elif indices=="ndwi anomaly":
-
-		if satelite == "modis":
-			collection = ee.ImageCollection('MODIS/MCD43A4_006_NDWI').filterDate('2000-01-01','2018-12-31').filterBounds(region_Gh.goemetry())
-			notes="Normalized Difference Water Index Anomaly TimeSeries"
-
-			ndwi_mean = ee.ImageCollection(collection).mean().reduce(ee.Reducer.mean())
-			ndwi_std = ee.ImageCollection(collection).mean().reduce(ee.Reducer.stdDev())
-			print(ndwi_std)
-			def h(img): return ee.Image(img).subtract(ndwi_mean).divide(ndwi_std).rename('NDWI')
-			selected_NDWI = ee.ImageCollection(collection).filterDate(start_date,end_date).map(h)
-			NDWI_anom = ee.ImageCollection(selected_NDWI).select(['NDWI'])
-			return get_time_series(options,NDWI_anom,region,notes)	
-		elif satelite=="landsat":
-			#   filter on date and bounds
-
-			l5images = nl5.filterBounds(region_Gh.geometry()).map(cloudfunction).select(["B2","B4"],["green","nir"]).map(ndwi)
-			l7images = nl7.filterBounds(region_Gh.geometry()).map(cloudfunction).select(["B2","B4"],["green","nir"]).map(ndwi)
-			l8images = nl8.filterBounds(region_Gh.geometry()).map(cloudfunction).select(["B3","B5"],["green","nir"]).map(ndwi)
+		l5images = nl5.filterBounds(region_Gh.geometry()).map(cloudfunction).select(["B2","B4"],["green","nir"]).map(ndwi_anom)
+		l7images = nl7.filterBounds(region_Gh.geometry()).map(cloudfunction).select(["B2","B4"],["green","nir"]).map(ndwi_anom)
+		l8images = nl8.filterBounds(region_Gh.geometry()).map(cloudfunction).select(["B3","B5"],["green","nir"]).map(ndwi_anom)
 			#calculate ndwi for each image in imagecollection
-			l578NDWI = ee.ImageCollection(l5images.merge(l7images)).merge(l8images)	
+		l578NDWI = ee.ImageCollection(l5images.merge(l7images)).merge(l8images)	
 
-		
+		selected_year_month_data = ee.ImageCollection(l578NDWI).filterDate(start_date,end_date)
+		NDWI_anom =ee.ImageCollection(selected_year_month_data )
 
-			ndwi_mean = ee.ImageCollection(ee.ImageCollection(l5images).merge(l7images)).merge(l8images)
-
-			ndwi_std = ee.ImageCollection(l578NDWI).reduce(ee.Reducer.stdDev())
-			def h(img): return ee.Image(img).subtract(ndwi_mean).divide(ndwi_std).rename('NDWI')
-			selected_year_month_data = ee.ImageCollection(l578NDWI).filterDate(start_date,end_date).map(h)
-			NDWI_anom =ee.ImageCollection(selected_year_month_data ).select('NDWI')
-
-			notes="Normalized Difference Water Index Anomaly TimeSeries"
-			return get_time_series(options,NDWI_anom,region,notes)
+		notes="Normalized Difference Water Index Anomaly TimeSeries"
+		return get_time_series(options,NDWI_anom,region,notes)
 
 
 			
 	elif indices=="precipitation":
-		collection1 = ee.ImageCollection('UCSB-CHG/CHIRPS/PENTAD').filterDate(start_date,end_date).filterBounds(region_Gh.goemetry())	
+		collection1 = ee.ImageCollection('UCSB-CHG/CHIRPS/PENTAD').filterDate(start_date,end_date).filterBounds(region_Gh.geometry())	
 		#select Precipitation
 		selected_Precipitation = ee.ImageCollection(collection1).select('precipitation')
 		notes="Precipitation  TimeSeries"
 		return get_time_series(options,selected_Precipitation,region,notes)
 	elif indices=="vhi":
 
-		if satelite=="avhrr":
-		
-			collection = ee.ImageCollection('NOAA/CDR/AVHRR/NDVI/V4').select('NDVI').filterDate(start_date,end_date).filterBounds(region_Gh.goemetry()).mean()
-		
-			#select ndvi
-			selected_ndvi = ee.Image(collection).multiply(0.0001)
-			Brightness_Temp = ee.ImageCollection('NOAA/CDR/AVHRR/SR/V4').select('BT_CH4').filterDate(start_date,end_date).filterBounds(region_Gh.goemetry()).mean()
+		l5images = ee.ImageCollection(nl5.combine(btl5).filterBounds(region_Gh.geometry())).map(cloudfunction).select(["B4","B3","SR"],["nir","red","SR"]).map(vhi)
+		l7images = ee.ImageCollection(nl7.combine(btl7).filterBounds(region_Gh.geometry())).map(cloudfunction).select(["B4","B3","SR"],["nir","red","SR"]).map(vhi)
+		l8images = ee.ImageCollection(nl8.combine(btl8).filterBounds(region_Gh.geometry())).map(cloudfunction).select(["B5","B4","SR"],["nir","red","SR"]).map(vhi)
 
-			selected_bt = ee.Image(Brightness_Temp).multiply(0.01)
-			# Normalize THe NDVI
-			min = ee.Image(selected_ndvi).reduceRegion(ee.Reducer.min(), region_Gh, 3000).getInfo()['NDVI']
-			max = ee.Image(selected_ndvi).reduceRegion(ee.Reducer.max(), region_Gh, 3000).getInfo()['NDVI']
-			VCI = ee.Image(selected_ndvi).subtract(ee.Number(min)).multiply(100).divide(ee.Number(max).subtract(ee.Number(min)))
-			bt_min = ee.Image(selected_bt).reduceRegion(ee.Reducer.min(), region_Gh, 3000).getInfo().get("BT_CH4")
+		total_col=ee.ImageCollection(ee.ImageCollection(l5images).merge(l7images)).merge(l8images)
 
-			bt_max = ee.Image(selected_bt).reduceRegion(ee.Reducer.max(), region_Gh, 3000).getInfo().get("BT_CH4")
+		VHI= ee.ImageCollection(total_col).filterDate(start_date,end_date)
 
-			TCI = selected_bt.subtract(ee.Number(bt_max)).multiply(-100).divide(ee.Number(bt_max).subtract(bt_min))
-			notes="Vegetation Health Index TimeSeries"
-			VHI = VCI.multiply(0.5).add(TCI.multiply(0.5))
-			print(ee.ImageCollection(VHI).getInfo())
-		elif satelite=="landsat":
-
-			l5images = ee.ImageCollection(nl5.combine(btl5).filterBounds(region_Gh.geometry())).map(cloudfunction).select(["B4","B3","SR"],["nir","red","SR"]).map(vhi)
-			l7images = ee.ImageCollection(nl7.combine(btl7).filterBounds(region_Gh.geometry())).map(cloudfunction).select(["B4","B3","SR"],["nir","red","SR"]).map(vhi)
-			l8images = ee.ImageCollection(nl8.combine(btl8).filterBounds(region_Gh.geometry())).map(cloudfunction).select(["B5","B4","SR"],["nir","red","SR"]).map(vhi)
-
-			total_col=ee.ImageCollection(ee.ImageCollection(l5images).merge(l7images)).merge(l8images)
-
-			VHI= ee.ImageCollection(total_col).filterDate(start_date,end_date)
-
-
+		notes="Vegetation Health Index TimeSeries"
 		return get_time_series(options,ee.ImageCollection(VHI),region,notes)	
 	elif indices=="lst":
-		if satelite=="modis":
-			collection = ee.ImageCollection('MODIS/006/MOD11A2').select('LST_Day_1km').filterDate(start_date,end_date).filterBounds(region_Gh.goemetry()).map(lst_map)
-			#select LST
-			selected_LST =ee.ImageCollection(collection)
+		l5images = ee.ImageCollection(nl5.combine(btl5).filterBounds(region_Gh.geometry())).map(cloudfunction).select(["B4","B3","B6","SR"],["nir","red","B6","SR"]).map(lst5)
+		l7images = ee.ImageCollection(nl7.combine(btl7).filterBounds(region_Gh.geometry())).map(cloudfunction).select(["B4","B3","B6_VCID_1","SR"],["nir","red","B6","SR"]).map(lst7)
+		l8images = ee.ImageCollection(nl8.combine(btl8).filterBounds(region_Gh.geometry())).map(cloudfunction).select(["B5","B4","B10","SR"],["nir","red","B10","SR"]).map(lst8)
 
-		elif satelite=="landsat":
+		total_col=ee.ImageCollection(ee.ImageCollection(l5images).merge(l7images)).merge(l8images)
 
-			l5images = ee.ImageCollection(nl5.combine(btl5).filterBounds(region_Gh.geometry())).map(cloudfunction).select(["B4","B3","B6","SR"],["nir","red","B6","SR"]).map(lst5)
-			l7images = ee.ImageCollection(nl7.combine(btl7).filterBounds(region_Gh.geometry())).map(cloudfunction).select(["B4","B3","B6_VCID_1","SR"],["nir","red","B6","SR"]).map(lst7)
-			l8images = ee.ImageCollection(nl8.combine(btl8).filterBounds(region_Gh.geometry())).map(cloudfunction).select(["B5","B4","B10","SR"],["nir","red","B10","SR"]).map(lst8)
-
-			total_col=ee.ImageCollection(ee.ImageCollection(l5images).merge(l7images)).merge(l8images)
-
-			LST=ee.ImageCollection(total_col).filterDate(start_date,end_date)
-			selected_LST=ee.ImageCollection(LST)
-
-
+		LST=ee.ImageCollection(total_col).filterDate(start_date,end_date)
+		selected_LST=ee.ImageCollection(LST)
 		notes="Land Surface Temperature TimeSeries"
 		return get_time_series(options,selected_LST,region,notes)
 	elif indices=="smi":

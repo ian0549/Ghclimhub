@@ -700,12 +700,12 @@ def ndwi_anomaly(options):
 			print(min,max)
 
 		vizAnomaly = {
-		'min':min, 'max':max, 
-		'palette': ','.join(['#b2182b','#ef8a62','#fddbc7','#f7f7f7','#d1e5f0','#67a9cf','#2166ac'])
+		'min':min, 'max':max,
+		'palette': ','.join([ "#e20000 ","32cd32","ffff00","ff8c00","#00f9f9","#3570dd","0000ff"])
 	  }
 		notes = "NORMALIZED DIFFERENCE WATER INDEX ANOMALY calculated" + " for  " + str(date_year) + "-" + str(date_month)
 		name=notes
-		download= getData(NDWI_anom,str(region_Gh.geometry().getInfo()['coordinates']),scale,"NDWI Anomaly"+ str(date_year) + "-" + str(date_month))
+		download= getData(NDWI_anom,str(region_Gh.geometry().getInfo()['coordinates']),scale,"NDWI"+ str(date_year) + "-" + str(date_month))
 		mapid = ee.Image(NDWI_anom).clip(region_Gh).getMapId(vizAnomaly)
 		col = {'mapid':mapid['mapid'],'token':mapid['token'],'note':notes ,'type':'ndwi_anomaly' ,'min':min,'max':max }
 		col['download_data']=download 
@@ -783,7 +783,7 @@ def precipitation(options):
 
 		vizAnomaly = {
 		'min':min, 'max':max, 
-		'palette': ','.join(['#ef0404','#ff7700','#ffee00','#52f904','#087702'])
+		'palette': ','.join(['#730000', '#E60000', '#FFAA00', '#FCD37F', '#FFFF00', '#FFFFFF', '#AAFF55', '#00FFFF', '#00AAFF', '#0000FF', '#0000AA'])
 	  }
 		notes = "PRECIPITATION calculated" + " for  " + str(date_year) + "-" + str(date_month)
 		name=notes
@@ -999,11 +999,11 @@ def ndvi_anomaly(options):
 
 		vizAnomaly = {
 		'min':min, 'max':max, 
-		'palette': ','.join(["87000A","7C3E28","EC712C","FABF45","FFFFFF","51FF78","3DCF4C","215229","0B260B"])
+		'palette': ','.join(["87000A","7C3E28","EC712C","FABF45","FFFFFF","51FF78","3DCF4C","215229"])
 	  }
 		notes = "NORMALIZED DIFFERENCE VEGETATION INDEX ANOMALY calculated" + " for  " + str(date_year) + "-" + str(date_month)
 		name=notes
-		download= getData(ndvi_anom,str(region_Gh.geometry().getInfo()['coordinates']),scale,"NDVI Anomaly"+ str(date_year) + "-" + str(date_month))
+		download= getData(ndvi_anom,str(region_Gh.geometry().getInfo()['coordinates']),scale,"NDVI"+ str(date_year) + "-" + str(date_month))
 		mapid = ee.Image(ndvi_anom).clip(region_Gh).getMapId(vizAnomaly)
 		col = {'mapid':mapid['mapid'],'token':mapid['token'],'note':notes ,'type':'ndvi_anomaly' ,'min':min,'max':max }
 		col['download_data']=download 
@@ -1423,13 +1423,7 @@ def SMI(options):
 
 		vizAnomaly = {
 		'min':-1, 'max':1, 
-		'palette': ','.join(['#00008F', '#0000AC', '#0000CF', '#0000DF', '#0000EF', '#0000FF',
-				   '#0010FF', '#0025FF', '#0040FF', '#0050FF', '#0070FF', '#0080FF',
-				   '#009FFF', '#009FFF', '#00AFFF', '#00BFFF', '#00D2FF','#00D2FF','#00DFFF','#00FFFF',
-				   '#10FFEF','#30FFCF','#44FFBB','#6FFF90','#8FFF70','#AFFF50','#CFFF30','#DFFF20','#FFFF00','#FFDF00',
-				   '#FFCF00','#FFAF00','#FF9F00','#FF8000','#FF7000','#FF6000','#FF4000','#FF3000','#FF2000',
-				   '#FF1000','#F70000','#EF0000','#DF0000','#CF0000','#BF0000','#AF0000','#9C0000','#8F0000','#860000',
-				   '#800000'])
+		'palette': ','.join( ['#730000', '#E60000', '#FFAA00', '#FCD37F', '#FFFF00', '#FFFFFF', '#AAFF55', '#00FFFF', '#00AAFF', '#0000FF', '#0000AA'])
 	  }
 		notes = "SOIL MOISTURE INDEX calculated" + " for  " + str(date_year) + "-" + str(date_month)
 		scale=300
