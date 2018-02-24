@@ -1378,7 +1378,6 @@ $(document).on('submit', '#indices_series_form1', function (e) {
 
 					} else {
 						waitingDialog.hide();
-						$(".modal-body").text(data.error);
 						$("#alBox").al({
 
 							// default, success, warning, error

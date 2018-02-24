@@ -23,7 +23,6 @@ urlpatterns = [
 	url(r'^about$', app.views.about, name='about'),
 	url(r'^calc_data', app.views.calcdata, name='calc_data'),
 	url(r'^calc_drought', app.views.cal_drought, name='calc_drought'),
-	url(r'^update_palette', app.views.update_palette, name='update_palette'),
 	url(r'^download_data', app.views.download_data, name='download_data'),
 	url(r'^chart_data', app.views.chart_data, name='chart_data'),
 	url(r'^indices_compute', app.views.indices_compute, name='indices_compute'),

@@ -10,8 +10,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="keywords" content="Viticulture Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template, 
 Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyEricsson, Motorola web design" />
-<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false);
-		function hideURLbar(){ window.scrollTo(0,1); } </script>
+
 <!-- //custom-theme -->
    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <link href="../../static/app/content/style.css" rel="stylesheet" type="text/css" media="all" />
@@ -24,31 +23,22 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 
 <link href="../../static/app/content/style.css" rel="stylesheet" />
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-
+<link href="../../static/app/content/al.css" rel="stylesheet" />
 <link href="../../static/app/content/jquery.ui.core.min.css" rel="stylesheet" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js" ></script>	
-<script src="../../static/app/scripts/functions_colorbar.js"></script>
 <link href="../../static/app/content/jquery.ui.theme.min.css" rel="stylesheet" />
 <link href="../../static/app/content/colorbrewer.css" rel="stylesheet" />
  <!--  jQuery -->
 <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
 
 <!-- Isolated Version of Bootstrap, not needed if your site already uses Bootstrap -->
-<link rel="stylesheet" href="https://formden.com/static/cdn/bootstrap-iso.css" />
-
 
  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
 
 <!-- Bootstrap Date-Picker Plugin -->
 <script src="../../static/app/scripts/jquery-1.11.1.min.js"></script>
-
-<script src="../../static/app/scripts/colorbar.js"></script>
-<script src="../../static/app/scripts/ee_api_js_debug.js"></script>
-<script src="../../static/app/scripts/colorbrewer.js"></script>
-<script src="../../static/app/scripts/ee_api_js.js"></script>
 <script src="../../static/app/scripts/d3.v3.min.js"></script>
-<script src="../../static/app/scripts/formListener_colorbar.js"></script>
 <link href="../../static/app/content/jquery-ui.css" rel="stylesheet" />
 <style>
 	   #map {
@@ -204,8 +194,8 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 
 			  
 			  <div class="_input-block _regression">
-				<div class="_input-block-label">Dataset <span id="regression-tooltip" data-placement="bottom" data-toggle="tooltip" title="<div style='text-align:left; font-size:13px;'>Choose the type of regression:<br>
-																																			  >">
+				<div class="_input-block-label">Dataset <span id="regression-tooltip" data-placement="bottom" data-toggle="tooltip" title="Choose the type Dataset to Compute
+																																			  </div>">
 								<span class="glyphicon glyphicon-question-sign"></span>
 							  </span> :
 				</div>
@@ -248,27 +238,50 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			  </div>
 
 			
-					</div>		 
-			
-			  <div class="_input-block cloudscore">
-				<div class="_input-block-label">Cloud score <span id="cloudscore-tooltip" data-toggle="tooltip" title="Choose the maximal cloud score value for each pixel.<br>Pixels with a greater cloud score than the chosen one are masked out.<br>A higher value means that the pixel is more likely to be a cloud.">
-								<span class="glyphicon glyphicon-question-sign"></span>
-							  </span> :
+					</div>	<br />
+						 
+		<div class="panel panel-primary">
+	<div class="panel-heading">
+					<h4 class="panel-title">Area Of Interest</h4>
 				</div>
-				  <input type="number" name="cloudscore" value="30" autocomplete="off" class="_cloudscore-picker form-control" maxlength="3" min="1" max="100" value="30">
-			  </div>
+				<div class="panel-body"><p  class="panel panel-large">Select a region of interest from the dropdown Or use a Polygon to highlight the area to compute the Indices</p>
+	<!--DropDown-->
 
-						 <br />
 
-			 
+	<select autocomplete="off" class="_source-picker form-control" name="region1" id="region1">
+				<option value="ghana" name="ghana">Ghana</option>
+				  <option value="Accra" name="accra">Accra</option>
+	 <option value="Ashanti" name="ashanti">Ashanti Region </option>
+	 <option value="Western" name="western">Western Region</option>
+	 <option value="Eastern" name="eatern">Eastern Region</option>
+	 <option value="Northern" >Northern Region</option>
+	 <option value="Upper East">Upper East</option>
+	 <option value="Upper West">Upper West</option>
+			 <option value="Central">Central Region</option>
+			 <option value="Brong Ahafo">Brong Ahafo</option>
+			 <option value="Volta">Volta Region</option>
+	
+				</select><br />
+
+	<p> OR</p><br />
+ <button id="poly_map" type="button" class="btn btn-success" value="Use Polygon On Map">Use Polygon On Map</button>
+
+	</div>	
+</div>
+
+
+
+		
+				 
 						  
 			  <div class="input-block buttons">
 				<span id="compute-tooltip" data-toggle="tooltip" title="Please set a point or region first.">
-				  <button id="compute" autocomplete="off" class="_compute btn btn-primary " >Get Map</button>
+				<input type="submit" name="submit" value="GET MAP" class="btn btn-danger btn-block" /><br />
+
 				</span>
 
 				
-			  </div>
+			  </div><br/>
 						 
 						 
 						 </form>
@@ -309,9 +322,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 				
 					<!-- Block with relevant organisation/company logo and link to websites -->
 				
-					<div class="_attributions">
-						<a href="https://earthengine.google.com/" target="_blank"><img border="0" src="../../static/app/images/google_earthengine_powered_400px.png" style="height:34px; margin-left:15px"></a>
-					</div>
+
 				</div>
 				
 				<!-- scrollbar for entire panel -->
@@ -339,213 +350,6 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 
 	<div class="collapse navbar-collapse" id="mapoptionscollapse" style="background-color:#FFFFFF;text-align:center;">
 	  <ul class="nav navbar-nav">
-		<li class=" dropdown button-dropdown dropdown-menu "  >
-		  <a id="colormapDropdown" href="#"  data-toggle="dropdown" class="dropdown-toggle" >Change Colors<strong class="caret"></strong></a>
-		  <div class="dropdown-menu" style="min-width:330px;padding: 15px; padding-bottom: 0px;" role="presentation">
-			<div id="tour_map_colorbar">
-
-<div class="panel panel-default">
-<div class="panel-body panel-forms">
-<div class="row">
-<div class="col-xs-8">
-	<div class="row">
-		  <div class="col-xs-12">
-			<b><span style="color:blue;font-size:medium">Color Options:</span></b><br>
-			 <input type="hidden" id="colorbarLabel" name="colorbarLabel" value="Precipitation (mm)">
-		  </div>
-	</div>
-   <div class="colorbarSample" style="display: inline;"> <!--ie. linked with sample colorbar ..really for true color to go away-->
-   <div class="panel panel-default">
-   <div class="panel-body panel-forms">
-	
-	</div></div>
-	</div>
-<div class="panel panel-default">
-<div class="panel-body panel-forms">
-	<div class="row">
-		   <div class="col-xs-12">
-			  <div class="colorbarMinMaxChoices">
-
-			<b>Values:</b><br>
-			  Min.:&nbsp;&nbsp;<input type="text" id="minColorbar" name="minColorbar" value="0" size="4">
-			<div class="varUnits" style="display:inline">mm</div>
-			   <input type="hidden" class="varUnits" id="varUnits" name="varUnits" value="mm" size="4" readonly>
-				 
-			<br>
-			Max.: <input type="text" id="maxColorbar" name="maxColorbar" value="400" size="4">
-				
-			<div class="varUnits" style="display:inline">mm</div>
-			</div>
-			<div class="colorbarTicks" style="display:none">
-								<b>Colorbar Ticks:</b>
-				<a data-toggle="popover" data-html="true" data-placement="right" data-container="body" data-trigger="focus" tabindex="0" style="height:100px;font-size:11px;font-family:Arial, sans-serif;" rel="popover" data-original-title="Modifying Colorbar Ticks" data-content="
-This string corresponds to the tick marks on the colorbar. As you edit, the sample colorbar here should change.<br><br>
-Note: the format for this string is between 3-11 numbers separated by commas. 
-" template=""><img src="images/questionmark.gif"></a>
-
-								<input type="text" id="colorbarTicks" name="colorbarTicks" value="0,5,24,50,70,90,110,130,150,200,400,800">
-								<div class="error" id="form_error_colorbarTicks" style="display:none"></div>
-						</div>
-		  </div>
-	</div>
-</div></div>
-<div class="colorbarSample" style="display: inline;">
-<div class="panel panel-default">
-<div class="panel-body panel-forms">
-	<form  method="post" action="{% url 'dataset' %} " id="update_form" >
-
-					 {% csrf_token %}
-	<div class="row">
-		<div class="col-xs-12">
-			<div class="colorbarType">
-			 <b>Colormap Type:</b>
-			 <select id="colorbarType" name="colorbarType" style="width:100%">
-				
-					<option value="continuous" selected="">Continuous</option>
-				
-					<option value="discrete">Discrete</option>
-				
-			</select>
-			</div>
-		   </div>
-	</div>
-	<div class="row">
-		<div class="col-xs-12">
-			 <div class="colorbarSizeChoices">
-			 <b>Number of Colors:</b>
-			<select id="colorbarsize" name="colorbarsize" class="colorbarsize" style="width:100%">
-		
-					
-				
-			<option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option></select>
-			</div>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-xs-12">
-			<b>Color Palette:</b>
-			<select id="colorbarmap" name="colorbarmap" class="colorbarmap" style="width:100%">
-				<optgroup label="Divergent Maps">
-					
-						<option value="RdBu">Red-Blue</option>
-					
-						<option value="BuRd">Blue-Red</option>
-					
-						<option value="RdYlBu">Red-Yellow-Blue</option>
-					
-						<option value="BuYlRd">Blue-Yellow-Red</option>
-					
-						<option value="RdYlGn">Red-Yellow-Green</option>
-					
-						<option value="PuOr">Purple-Orange</option>
-					
-						<option value="BrBG">Brown-Blue-Green</option>
-					
-						<option value="GBBr">Green-Blue-Brown</option>
-					
-						<option value="PRGn">PR-Green</option>
-					
-						<option value="PiYG">Pi-YG</option>
-					
-						<option value="RdGy">Red-Grey</option>
-					
-						<option value="invRdGy">Grey-Red</option>
-					
-						<option value="Spectral">Spectral</option>
-					
-				</optgroup>
-				<optgroup label="Sequential Maps">
-					
-						<option value="Greens">Greens</option>
-					
-						<option value="Blues">Blues</option>
-					
-						<option value="invBlues">invBlues</option>
-					
-						<option value="Oranges">Oranges</option>
-					
-						<option value="Reds">Reds</option>
-					
-						<option value="YlGn">Yellow-Green</option>
-					
-						<option value="GnBu" selected="">Green-Blue</option>
-					
-						<option value="BuGn">Blue-Green</option>
-					
-						<option value="PuBuGn">Purple-Blue-Green</option>
-					
-						<option value="PuBu">Purple-Blue</option>
-					
-						<option value="BuPu">Blue-Purple</option>
-					
-						<option value="RdPu">Red-Purple</option>
-					
-						<option value="PuRd">Purple-Red</option>
-					
-						<option value="OrRd">Orange-Red</option>
-					
-						<option value="YlOrRd">Yellow-Orange-Red</option>
-					
-						<option value="YlOrBr">Yellow-Orange-Brown</option>
-					
-						<option value="YlGnBu">Yellow-Green-Blue</option>
-					
-						<option value="PuBuGn">Purple-Blue-Green</option>
-					
-						<option value="Purples">Purples</option>
-					
-						<option value="Greys">Greys</option>
-					
-						<option value="invGreys">invGreys</option>
-					
-				</optgroup>
-				<optgroup label="Custom Maps">
-					
-						<option value="USDMwWet">USDM Blue-White-Red</option>
-					
-						<option value="invUSDMwWet">USDM Red-White-Blue</option>
-					
-						<option value="EDDI">EDDI Blue-White-Red</option>
-					
-						<option value="invEDDI">EDDI Red-White-Blue</option>
-					
-						<option value="ETActual">USGS ET</option>
-					
-						<option value="ETAnomaly">USGS ET Anomaly</option>
-					
-				</optgroup>
-			</select>		
-		 </div>
-	</div>
-	 
-</div><!-- end white panel -->
-</div>
-</div>
-</div><!--end col-9 -->
-   <div class="col-xs-4">
-		<div class="colorbarSample" style="display: inline;">
-			<b>Sample <br>Colorbar</b>
-		<div style="text-align:center">
-				<div id="colorbar1" >
-					<svg style="width:30;height:30;"></svg><svg class="colorbar" width="110" height="280" style="margin-top: -20px; margin-left: -10px;"><g class="colorbar" transform="translate(10,20)"><g class="legend rectArea"></g><g class="axis color" transform="translate (30,0)"><g class="tick" transform="translate(0,250)" style="opacity: 1;"><line x2="6" y2="0"></line><text dy=".32em" x="9" y="0" style="text-anchor: start;">0</text></g><g class="tick" transform="translate(0,218.75000000000003)" style="opacity: 1;"><line x2="6" y2="0"></line><text dy=".32em" x="9" y="0" style="text-anchor: start;">50</text></g><g class="tick" transform="translate(0,187.5)" style="opacity: 1;"><line x2="6" y2="0"></line><text dy=".32em" x="9" y="0" style="text-anchor: start;">100</text></g><g class="tick" transform="translate(0,156.25)" style="opacity: 1;"><line x2="6" y2="0"></line><text dy=".32em" x="9" y="0" style="text-anchor: start;">150</text></g><g class="tick" transform="translate(0,125)" style="opacity: 1;"><line x2="6" y2="0"></line><text dy=".32em" x="9" y="0" style="text-anchor: start;">200</text></g><g class="tick" transform="translate(0,93.75000000000003)" style="opacity: 1;"><line x2="6" y2="0"></line><text dy=".32em" x="9" y="0" style="text-anchor: start;">250</text></g><g class="tick" transform="translate(0,62.5)" style="opacity: 1;"><line x2="6" y2="0"></line><text dy=".32em" x="9" y="0" style="text-anchor: start;">300</text></g><g class="tick" transform="translate(0,31.24999999999999)" style="opacity: 1;"><line x2="6" y2="0"></line><text dy=".32em" x="9" y="0" style="text-anchor: start;">350</text></g><g class="tick" transform="translate(0,0)" style="opacity: 1;"><line x2="6" y2="0"></line><text dy=".32em" x="9" y="0" style="text-anchor: start;">400</text></g><path class="domain" d="M6,0H0V250H6"></path></g><rect class="legend" width="30" height="2" y="0" x="0" style="opacity: 1; fill: rgb(8, 88, 158);"></rect><rect class="legend" width="30" height="2" y="1" x="0" style="opacity: 1; fill: rgb(9, 89, 159);"></rect><rect class="legend" width="30" height="2" y="2" x="0" style="opacity: 1; fill: rgb(10, 91, 160);"></rect><rect class="legend" width="30" height="2" y="3" x="0" style="opacity: 1; fill: rgb(11, 92, 161);"></rect><rect class="legend" width="30" height="2" y="4" x="0" style="opacity: 1; fill: rgb(12, 94, 162);"></rect><rect class="legend" width="30" height="2" y="5" x="0" style="opacity: 1; fill: rgb(13, 95, 162);"></rect><rect class="legend" width="30" height="2" y="6" x="0" style="opacity: 1; fill: rgb(14, 97, 163);"></rect><rect class="legend" width="30" height="2" y="7" x="0" style="opacity: 1; fill: rgb(15, 98, 164);"></rect><rect class="legend" width="30" height="2" y="8" x="0" style="opacity: 1; fill: rgb(16, 100, 165);"></rect><rect class="legend" width="30" height="2" y="9" x="0" style="opacity: 1; fill: rgb(17, 101, 166);"></rect><rect class="legend" width="30" height="2" y="10" x="0" style="opacity: 1; fill: rgb(18, 103, 167);"></rect><rect class="legend" width="30" height="2" y="11" x="0" style="opacity: 1; fill: rgb(19, 104, 168);"></rect><rect class="legend" width="30" height="2" y="12" x="0" style="opacity: 1; fill: rgb(20, 105, 169);"></rect><rect class="legend" width="30" height="2" y="13" x="0" style="opacity: 1; fill: rgb(21, 107, 170);"></rect><rect class="legend" width="30" height="2" y="14" x="0" style="opacity: 1; fill: rgb(22, 108, 171);"></rect><rect class="legend" width="30" height="2" y="15" x="0" style="opacity: 1; fill: rgb(23, 110, 171);"></rect><rect class="legend" width="30" height="2" y="16" x="0" style="opacity: 1; fill: rgb(24, 111, 172);"></rect><rect class="legend" width="30" height="2" y="17" x="0" style="opacity: 1; fill: rgb(25, 113, 173);"></rect><rect class="legend" width="30" height="2" y="18" x="0" style="opacity: 1; fill: rgb(26, 114, 174);"></rect><rect class="legend" width="30" height="2" y="19" x="0" style="opacity: 1; fill: rgb(27, 116, 175);"></rect><rect class="legend" width="30" height="2" y="20" x="0" style="opacity: 1; fill: rgb(28, 117, 176);"></rect><rect class="legend" width="30" height="2" y="21" x="0" style="opacity: 1; fill: rgb(29, 119, 177);"></rect><rect class="legend" width="30" height="2" y="22" x="0" style="opacity: 1; fill: rgb(30, 120, 178);"></rect><rect class="legend" width="30" height="2" y="23" x="0" style="opacity: 1; fill: rgb(31, 121, 179);"></rect><rect class="legend" width="30" height="2" y="24" x="0" style="opacity: 1; fill: rgb(32, 123, 180);"></rect><rect class="legend" width="30" height="2" y="25" x="0" style="opacity: 1; fill: rgb(32, 124, 180);"></rect><rect class="legend" width="30" height="2" y="26" x="0" style="opacity: 1; fill: rgb(33, 126, 181);"></rect><rect class="legend" width="30" height="2" y="27" x="0" style="opacity: 1; fill: rgb(34, 127, 182);"></rect><rect class="legend" width="30" height="2" y="28" x="0" style="opacity: 1; fill: rgb(35, 129, 183);"></rect><rect class="legend" width="30" height="2" y="29" x="0" style="opacity: 1; fill: rgb(36, 130, 184);"></rect><rect class="legend" width="30" height="2" y="30" x="0" style="opacity: 1; fill: rgb(37, 132, 185);"></rect><rect class="legend" width="30" height="2" y="31" x="0" style="opacity: 1; fill: rgb(38, 133, 186);"></rect><rect class="legend" width="30" height="2" y="32" x="0" style="opacity: 1; fill: rgb(39, 135, 187);"></rect><rect class="legend" width="30" height="2" y="33" x="0" style="opacity: 1; fill: rgb(40, 136, 188);"></rect><rect class="legend" width="30" height="2" y="34" x="0" style="opacity: 1; fill: rgb(41, 138, 188);"></rect><rect class="legend" width="30" height="2" y="35" x="0" style="opacity: 1; fill: rgb(42, 139, 189);"></rect><rect class="legend" width="30" height="2" y="36" x="0" style="opacity: 1; fill: rgb(43, 140, 190);"></rect><rect class="legend" width="30" height="2" y="37" x="0" style="opacity: 1; fill: rgb(44, 141, 191);"></rect><rect class="legend" width="30" height="2" y="38" x="0" style="opacity: 1; fill: rgb(45, 142, 191);"></rect><rect class="legend" width="30" height="2" y="39" x="0" style="opacity: 1; fill: rgb(46, 144, 192);"></rect><rect class="legend" width="30" height="2" y="40" x="0" style="opacity: 1; fill: rgb(47, 145, 193);"></rect><rect class="legend" width="30" height="2" y="41" x="0" style="opacity: 1; fill: rgb(48, 146, 193);"></rect><rect class="legend" width="30" height="2" y="42" x="0" style="opacity: 1; fill: rgb(49, 147, 194);"></rect><rect class="legend" width="30" height="2" y="43" x="0" style="opacity: 1; fill: rgb(50, 148, 194);"></rect><rect class="legend" width="30" height="2" y="44" x="0" style="opacity: 1; fill: rgb(51, 149, 195);"></rect><rect class="legend" width="30" height="2" y="45" x="0" style="opacity: 1; fill: rgb(52, 150, 195);"></rect><rect class="legend" width="30" height="2" y="46" x="0" style="opacity: 1; fill: rgb(53, 151, 196);"></rect><rect class="legend" width="30" height="2" y="47" x="0" style="opacity: 1; fill: rgb(54, 152, 197);"></rect><rect class="legend" width="30" height="2" y="48" x="0" style="opacity: 1; fill: rgb(55, 153, 197);"></rect><rect class="legend" width="30" height="2" y="49" x="0" style="opacity: 1; fill: rgb(56, 155, 198);"></rect><rect class="legend" width="30" height="2" y="50" x="0" style="opacity: 1; fill: rgb(57, 156, 198);"></rect><rect class="legend" width="30" height="2" y="51" x="0" style="opacity: 1; fill: rgb(58, 157, 199);"></rect><rect class="legend" width="30" height="2" y="52" x="0" style="opacity: 1; fill: rgb(59, 158, 200);"></rect><rect class="legend" width="30" height="2" y="53" x="0" style="opacity: 1; fill: rgb(60, 159, 200);"></rect><rect class="legend" width="30" height="2" y="54" x="0" style="opacity: 1; fill: rgb(61, 160, 201);"></rect><rect class="legend" width="30" height="2" y="55" x="0" style="opacity: 1; fill: rgb(62, 161, 201);"></rect><rect class="legend" width="30" height="2" y="56" x="0" style="opacity: 1; fill: rgb(63, 162, 202);"></rect><rect class="legend" width="30" height="2" y="57" x="0" style="opacity: 1; fill: rgb(64, 163, 203);"></rect><rect class="legend" width="30" height="2" y="58" x="0" style="opacity: 1; fill: rgb(65, 164, 203);"></rect><rect class="legend" width="30" height="2" y="59" x="0" style="opacity: 1; fill: rgb(66, 165, 204);"></rect><rect class="legend" width="30" height="2" y="60" x="0" style="opacity: 1; fill: rgb(67, 167, 204);"></rect><rect class="legend" width="30" height="2" y="61" x="0" style="opacity: 1; fill: rgb(68, 168, 205);"></rect><rect class="legend" width="30" height="2" y="62" x="0" style="opacity: 1; fill: rgb(69, 169, 205);"></rect><rect class="legend" width="30" height="2" y="63" x="0" style="opacity: 1; fill: rgb(70, 170, 206);"></rect><rect class="legend" width="30" height="2" y="64" x="0" style="opacity: 1; fill: rgb(71, 171, 207);"></rect><rect class="legend" width="30" height="2" y="65" x="0" style="opacity: 1; fill: rgb(72, 172, 207);"></rect><rect class="legend" width="30" height="2" y="66" x="0" style="opacity: 1; fill: rgb(73, 173, 208);"></rect><rect class="legend" width="30" height="2" y="67" x="0" style="opacity: 1; fill: rgb(74, 174, 208);"></rect><rect class="legend" width="30" height="2" y="68" x="0" style="opacity: 1; fill: rgb(75, 175, 209);"></rect><rect class="legend" width="30" height="2" y="69" x="0" style="opacity: 1; fill: rgb(76, 176, 210);"></rect><rect class="legend" width="30" height="2" y="70" x="0" style="opacity: 1; fill: rgb(77, 177, 210);"></rect><rect class="legend" width="30" height="2" y="71" x="0" style="opacity: 1; fill: rgb(78, 179, 211);"></rect><rect class="legend" width="30" height="2" y="72" x="0" style="opacity: 1; fill: rgb(79, 179, 211);"></rect><rect class="legend" width="30" height="2" y="73" x="0" style="opacity: 1; fill: rgb(80, 180, 210);"></rect><rect class="legend" width="30" height="2" y="74" x="0" style="opacity: 1; fill: rgb(81, 181, 210);"></rect><rect class="legend" width="30" height="2" y="75" x="0" style="opacity: 1; fill: rgb(83, 182, 210);"></rect><rect class="legend" width="30" height="2" y="76" x="0" style="opacity: 1; fill: rgb(84, 182, 209);"></rect><rect class="legend" width="30" height="2" y="77" x="0" style="opacity: 1; fill: rgb(85, 183, 209);"></rect><rect class="legend" width="30" height="2" y="78" x="0" style="opacity: 1; fill: rgb(86, 184, 208);"></rect><rect class="legend" width="30" height="2" y="79" x="0" style="opacity: 1; fill: rgb(88, 184, 208);"></rect><rect class="legend" width="30" height="2" y="80" x="0" style="opacity: 1; fill: rgb(89, 185, 207);"></rect><rect class="legend" width="30" height="2" y="81" x="0" style="opacity: 1; fill: rgb(90, 186, 207);"></rect><rect class="legend" width="30" height="2" y="82" x="0" style="opacity: 1; fill: rgb(91, 186, 207);"></rect><rect class="legend" width="30" height="2" y="83" x="0" style="opacity: 1; fill: rgb(93, 187, 206);"></rect><rect class="legend" width="30" height="2" y="84" x="0" style="opacity: 1; fill: rgb(94, 188, 206);"></rect><rect class="legend" width="30" height="2" y="85" x="0" style="opacity: 1; fill: rgb(95, 189, 205);"></rect><rect class="legend" width="30" height="2" y="86" x="0" style="opacity: 1; fill: rgb(96, 189, 205);"></rect><rect class="legend" width="30" height="2" y="87" x="0" style="opacity: 1; fill: rgb(98, 190, 204);"></rect><rect class="legend" width="30" height="2" y="88" x="0" style="opacity: 1; fill: rgb(99, 191, 204);"></rect><rect class="legend" width="30" height="2" y="89" x="0" style="opacity: 1; fill: rgb(100, 191, 204);"></rect><rect class="legend" width="30" height="2" y="90" x="0" style="opacity: 1; fill: rgb(101, 192, 203);"></rect><rect class="legend" width="30" height="2" y="91" x="0" style="opacity: 1; fill: rgb(103, 193, 203);"></rect><rect class="legend" width="30" height="2" y="92" x="0" style="opacity: 1; fill: rgb(104, 193, 202);"></rect><rect class="legend" width="30" height="2" y="93" x="0" style="opacity: 1; fill: rgb(105, 194, 202);"></rect><rect class="legend" width="30" height="2" y="94" x="0" style="opacity: 1; fill: rgb(106, 195, 202);"></rect><rect class="legend" width="30" height="2" y="95" x="0" style="opacity: 1; fill: rgb(108, 196, 201);"></rect><rect class="legend" width="30" height="2" y="96" x="0" style="opacity: 1; fill: rgb(109, 196, 201);"></rect><rect class="legend" width="30" height="2" y="97" x="0" style="opacity: 1; fill: rgb(110, 197, 200);"></rect><rect class="legend" width="30" height="2" y="98" x="0" style="opacity: 1; fill: rgb(111, 198, 200);"></rect><rect class="legend" width="30" height="2" y="99" x="0" style="opacity: 1; fill: rgb(113, 198, 199);"></rect><rect class="legend" width="30" height="2" y="100" x="0" style="opacity: 1; fill: rgb(114, 199, 199);"></rect><rect class="legend" width="30" height="2" y="101" x="0" style="opacity: 1; fill: rgb(115, 200, 199);"></rect><rect class="legend" width="30" height="2" y="102" x="0" style="opacity: 1; fill: rgb(117, 200, 198);"></rect><rect class="legend" width="30" height="2" y="103" x="0" style="opacity: 1; fill: rgb(118, 201, 198);"></rect><rect class="legend" width="30" height="2" y="104" x="0" style="opacity: 1; fill: rgb(119, 202, 197);"></rect><rect class="legend" width="30" height="2" y="105" x="0" style="opacity: 1; fill: rgb(120, 203, 197);"></rect><rect class="legend" width="30" height="2" y="106" x="0" style="opacity: 1; fill: rgb(122, 203, 196);"></rect><rect class="legend" width="30" height="2" y="107" x="0" style="opacity: 1; fill: rgb(123, 204, 196);"></rect><rect class="legend" width="30" height="2" y="108" x="0" style="opacity: 1; fill: rgb(124, 204, 196);"></rect><rect class="legend" width="30" height="2" y="109" x="0" style="opacity: 1; fill: rgb(125, 205, 195);"></rect><rect class="legend" width="30" height="2" y="110" x="0" style="opacity: 1; fill: rgb(127, 205, 195);"></rect><rect class="legend" width="30" height="2" y="111" x="0" style="opacity: 1; fill: rgb(128, 206, 194);"></rect><rect class="legend" width="30" height="2" y="112" x="0" style="opacity: 1; fill: rgb(129, 206, 194);"></rect><rect class="legend" width="30" height="2" y="113" x="0" style="opacity: 1; fill: rgb(130, 207, 194);"></rect><rect class="legend" width="30" height="2" y="114" x="0" style="opacity: 1; fill: rgb(132, 207, 193);"></rect><rect class="legend" width="30" height="2" y="115" x="0" style="opacity: 1; fill: rgb(133, 208, 193);"></rect><rect class="legend" width="30" height="2" y="116" x="0" style="opacity: 1; fill: rgb(134, 208, 192);"></rect><rect class="legend" width="30" height="2" y="117" x="0" style="opacity: 1; fill: rgb(135, 209, 192);"></rect><rect class="legend" width="30" height="2" y="118" x="0" style="opacity: 1; fill: rgb(137, 209, 191);"></rect><rect class="legend" width="30" height="2" y="119" x="0" style="opacity: 1; fill: rgb(138, 210, 191);"></rect><rect class="legend" width="30" height="2" y="120" x="0" style="opacity: 1; fill: rgb(139, 210, 191);"></rect><rect class="legend" width="30" height="2" y="121" x="0" style="opacity: 1; fill: rgb(140, 211, 190);"></rect><rect class="legend" width="30" height="2" y="122" x="0" style="opacity: 1; fill: rgb(142, 211, 190);"></rect><rect class="legend" width="30" height="2" y="123" x="0" style="opacity: 1; fill: rgb(143, 212, 189);"></rect><rect class="legend" width="30" height="2" y="124" x="0" style="opacity: 1; fill: rgb(144, 212, 189);"></rect><rect class="legend" width="30" height="2" y="125" x="0" style="opacity: 1; fill: rgb(146, 213, 189);"></rect><rect class="legend" width="30" height="2" y="126" x="0" style="opacity: 1; fill: rgb(147, 213, 188);"></rect><rect class="legend" width="30" height="2" y="127" x="0" style="opacity: 1; fill: rgb(148, 213, 188);"></rect><rect class="legend" width="30" height="2" y="128" x="0" style="opacity: 1; fill: rgb(149, 214, 187);"></rect><rect class="legend" width="30" height="2" y="129" x="0" style="opacity: 1; fill: rgb(151, 214, 187);"></rect><rect class="legend" width="30" height="2" y="130" x="0" style="opacity: 1; fill: rgb(152, 215, 186);"></rect><rect class="legend" width="30" height="2" y="131" x="0" style="opacity: 1; fill: rgb(153, 215, 186);"></rect><rect class="legend" width="30" height="2" y="132" x="0" style="opacity: 1; fill: rgb(154, 216, 186);"></rect><rect class="legend" width="30" height="2" y="133" x="0" style="opacity: 1; fill: rgb(156, 216, 185);"></rect><rect class="legend" width="30" height="2" y="134" x="0" style="opacity: 1; fill: rgb(157, 217, 185);"></rect><rect class="legend" width="30" height="2" y="135" x="0" style="opacity: 1; fill: rgb(158, 217, 184);"></rect><rect class="legend" width="30" height="2" y="136" x="0" style="opacity: 1; fill: rgb(159, 218, 184);"></rect><rect class="legend" width="30" height="2" y="137" x="0" style="opacity: 1; fill: rgb(161, 218, 183);"></rect><rect class="legend" width="30" height="2" y="138" x="0" style="opacity: 1; fill: rgb(162, 219, 183);"></rect><rect class="legend" width="30" height="2" y="139" x="0" style="opacity: 1; fill: rgb(163, 219, 183);"></rect><rect class="legend" width="30" height="2" y="140" x="0" style="opacity: 1; fill: rgb(164, 220, 182);"></rect><rect class="legend" width="30" height="2" y="141" x="0" style="opacity: 1; fill: rgb(166, 220, 182);"></rect><rect class="legend" width="30" height="2" y="142" x="0" style="opacity: 1; fill: rgb(167, 221, 181);"></rect><rect class="legend" width="30" height="2" y="143" x="0" style="opacity: 1; fill: rgb(168, 221, 181);"></rect><rect class="legend" width="30" height="2" y="144" x="0" style="opacity: 1; fill: rgb(169, 221, 182);"></rect><rect class="legend" width="30" height="2" y="145" x="0" style="opacity: 1; fill: rgb(170, 222, 182);"></rect><rect class="legend" width="30" height="2" y="146" x="0" style="opacity: 1; fill: rgb(171, 222, 182);"></rect><rect class="legend" width="30" height="2" y="147" x="0" style="opacity: 1; fill: rgb(172, 223, 183);"></rect><rect class="legend" width="30" height="2" y="148" x="0" style="opacity: 1; fill: rgb(173, 223, 183);"></rect><rect class="legend" width="30" height="2" y="149" x="0" style="opacity: 1; fill: rgb(174, 223, 184);"></rect><rect class="legend" width="30" height="2" y="150" x="0" style="opacity: 1; fill: rgb(175, 224, 184);"></rect><rect class="legend" width="30" height="2" y="151" x="0" style="opacity: 1; fill: rgb(176, 224, 185);"></rect><rect class="legend" width="30" height="2" y="152" x="0" style="opacity: 1; fill: rgb(177, 225, 185);"></rect><rect class="legend" width="30" height="2" y="153" x="0" style="opacity: 1; fill: rgb(178, 225, 186);"></rect><rect class="legend" width="30" height="2" y="154" x="0" style="opacity: 1; fill: rgb(179, 225, 186);"></rect><rect class="legend" width="30" height="2" y="155" x="0" style="opacity: 1; fill: rgb(180, 226, 186);"></rect><rect class="legend" width="30" height="2" y="156" x="0" style="opacity: 1; fill: rgb(181, 226, 187);"></rect><rect class="legend" width="30" height="2" y="157" x="0" style="opacity: 1; fill: rgb(182, 227, 187);"></rect><rect class="legend" width="30" height="2" y="158" x="0" style="opacity: 1; fill: rgb(183, 227, 188);"></rect><rect class="legend" width="30" height="2" y="159" x="0" style="opacity: 1; fill: rgb(184, 227, 188);"></rect><rect class="legend" width="30" height="2" y="160" x="0" style="opacity: 1; fill: rgb(185, 228, 189);"></rect><rect class="legend" width="30" height="2" y="161" x="0" style="opacity: 1; fill: rgb(186, 228, 189);"></rect><rect class="legend" width="30" height="2" y="162" x="0" style="opacity: 1; fill: rgb(187, 229, 190);"></rect><rect class="legend" width="30" height="2" y="163" x="0" style="opacity: 1; fill: rgb(188, 229, 190);"></rect><rect class="legend" width="30" height="2" y="164" x="0" style="opacity: 1; fill: rgb(189, 229, 190);"></rect><rect class="legend" width="30" height="2" y="165" x="0" style="opacity: 1; fill: rgb(190, 230, 191);"></rect><rect class="legend" width="30" height="2" y="166" x="0" style="opacity: 1; fill: rgb(191, 230, 191);"></rect><rect class="legend" width="30" height="2" y="167" x="0" style="opacity: 1; fill: rgb(192, 230, 192);"></rect><rect class="legend" width="30" height="2" y="168" x="0" style="opacity: 1; fill: rgb(193, 231, 192);"></rect><rect class="legend" width="30" height="2" y="169" x="0" style="opacity: 1; fill: rgb(194, 231, 193);"></rect><rect class="legend" width="30" height="2" y="170" x="0" style="opacity: 1; fill: rgb(195, 232, 193);"></rect><rect class="legend" width="30" height="2" y="171" x="0" style="opacity: 1; fill: rgb(196, 232, 194);"></rect><rect class="legend" width="30" height="2" y="172" x="0" style="opacity: 1; fill: rgb(197, 232, 194);"></rect><rect class="legend" width="30" height="2" y="173" x="0" style="opacity: 1; fill: rgb(198, 233, 195);"></rect><rect class="legend" width="30" height="2" y="174" x="0" style="opacity: 1; fill: rgb(199, 233, 195);"></rect><rect class="legend" width="30" height="2" y="175" x="0" style="opacity: 1; fill: rgb(200, 234, 195);"></rect><rect class="legend" width="30" height="2" y="176" x="0" style="opacity: 1; fill: rgb(201, 234, 196);"></rect><rect class="legend" width="30" height="2" y="177" x="0" style="opacity: 1; fill: rgb(202, 234, 196);"></rect><rect class="legend" width="30" height="2" y="178" x="0" style="opacity: 1; fill: rgb(203, 235, 197);"></rect><rect class="legend" width="30" height="2" y="179" x="0" style="opacity: 1; fill: rgb(204, 235, 197);"></rect><rect class="legend" width="30" height="2" y="180" x="0" style="opacity: 1; fill: rgb(205, 235, 198);"></rect><rect class="legend" width="30" height="2" y="181" x="0" style="opacity: 1; fill: rgb(205, 236, 198);"></rect><rect class="legend" width="30" height="2" y="182" x="0" style="opacity: 1; fill: rgb(206, 236, 199);"></rect><rect class="legend" width="30" height="2" y="183" x="0" style="opacity: 1; fill: rgb(206, 236, 200);"></rect><rect class="legend" width="30" height="2" y="184" x="0" style="opacity: 1; fill: rgb(207, 236, 200);"></rect><rect class="legend" width="30" height="2" y="185" x="0" style="opacity: 1; fill: rgb(208, 236, 201);"></rect><rect class="legend" width="30" height="2" y="186" x="0" style="opacity: 1; fill: rgb(208, 237, 202);"></rect><rect class="legend" width="30" height="2" y="187" x="0" style="opacity: 1; fill: rgb(209, 237, 202);"></rect><rect class="legend" width="30" height="2" y="188" x="0" style="opacity: 1; fill: rgb(209, 237, 203);"></rect><rect class="legend" width="30" height="2" y="189" x="0" style="opacity: 1; fill: rgb(210, 237, 203);"></rect><rect class="legend" width="30" height="2" y="190" x="0" style="opacity: 1; fill: rgb(210, 238, 204);"></rect><rect class="legend" width="30" height="2" y="191" x="0" style="opacity: 1; fill: rgb(211, 238, 205);"></rect><rect class="legend" width="30" height="2" y="192" x="0" style="opacity: 1; fill: rgb(212, 238, 205);"></rect><rect class="legend" width="30" height="2" y="193" x="0" style="opacity: 1; fill: rgb(212, 238, 206);"></rect><rect class="legend" width="30" height="2" y="194" x="0" style="opacity: 1; fill: rgb(213, 238, 207);"></rect><rect class="legend" width="30" height="2" y="195" x="0" style="opacity: 1; fill: rgb(213, 239, 207);"></rect><rect class="legend" width="30" height="2" y="196" x="0" style="opacity: 1; fill: rgb(214, 239, 208);"></rect><rect class="legend" width="30" height="2" y="197" x="0" style="opacity: 1; fill: rgb(214, 239, 208);"></rect><rect class="legend" width="30" height="2" y="198" x="0" style="opacity: 1; fill: rgb(215, 239, 209);"></rect><rect class="legend" width="30" height="2" y="199" x="0" style="opacity: 1; fill: rgb(215, 240, 210);"></rect><rect class="legend" width="30" height="2" y="200" x="0" style="opacity: 1; fill: rgb(216, 240, 210);"></rect><rect class="legend" width="30" height="2" y="201" x="0" style="opacity: 1; fill: rgb(217, 240, 211);"></rect><rect class="legend" width="30" height="2" y="202" x="0" style="opacity: 1; fill: rgb(217, 240, 211);"></rect><rect class="legend" width="30" height="2" y="203" x="0" style="opacity: 1; fill: rgb(218, 240, 212);"></rect><rect class="legend" width="30" height="2" y="204" x="0" style="opacity: 1; fill: rgb(218, 241, 213);"></rect><rect class="legend" width="30" height="2" y="205" x="0" style="opacity: 1; fill: rgb(219, 241, 213);"></rect><rect class="legend" width="30" height="2" y="206" x="0" style="opacity: 1; fill: rgb(219, 241, 214);"></rect><rect class="legend" width="30" height="2" y="207" x="0" style="opacity: 1; fill: rgb(220, 241, 215);"></rect><rect class="legend" width="30" height="2" y="208" x="0" style="opacity: 1; fill: rgb(220, 242, 215);"></rect><rect class="legend" width="30" height="2" y="209" x="0" style="opacity: 1; fill: rgb(221, 242, 216);"></rect><rect class="legend" width="30" height="2" y="210" x="0" style="opacity: 1; fill: rgb(222, 242, 216);"></rect><rect class="legend" width="30" height="2" y="211" x="0" style="opacity: 1; fill: rgb(222, 242, 217);"></rect><rect class="legend" width="30" height="2" y="212" x="0" style="opacity: 1; fill: rgb(223, 242, 218);"></rect><rect class="legend" width="30" height="2" y="213" x="0" style="opacity: 1; fill: rgb(223, 243, 218);"></rect><rect class="legend" width="30" height="2" y="214" x="0" style="opacity: 1; fill: rgb(224, 243, 219);"></rect><rect class="legend" width="30" height="2" y="215" x="0" style="opacity: 1; fill: rgb(224, 243, 219);"></rect><rect class="legend" width="30" height="2" y="216" x="0" style="opacity: 1; fill: rgb(225, 243, 220);"></rect><rect class="legend" width="30" height="2" y="217" x="0" style="opacity: 1; fill: rgb(226, 244, 221);"></rect><rect class="legend" width="30" height="2" y="218" x="0" style="opacity: 1; fill: rgb(226, 244, 221);"></rect><rect class="legend" width="30" height="2" y="219" x="0" style="opacity: 1; fill: rgb(227, 244, 222);"></rect><rect class="legend" width="30" height="2" y="220" x="0" style="opacity: 1; fill: rgb(228, 244, 222);"></rect><rect class="legend" width="30" height="2" y="221" x="0" style="opacity: 1; fill: rgb(228, 245, 223);"></rect><rect class="legend" width="30" height="2" y="222" x="0" style="opacity: 1; fill: rgb(229, 245, 224);"></rect><rect class="legend" width="30" height="2" y="223" x="0" style="opacity: 1; fill: rgb(230, 245, 224);"></rect><rect class="legend" width="30" height="2" y="224" x="0" style="opacity: 1; fill: rgb(230, 245, 225);"></rect><rect class="legend" width="30" height="2" y="225" x="0" style="opacity: 1; fill: rgb(231, 246, 225);"></rect><rect class="legend" width="30" height="2" y="226" x="0" style="opacity: 1; fill: rgb(232, 246, 226);"></rect><rect class="legend" width="30" height="2" y="227" x="0" style="opacity: 1; fill: rgb(232, 246, 226);"></rect><rect class="legend" width="30" height="2" y="228" x="0" style="opacity: 1; fill: rgb(233, 246, 227);"></rect><rect class="legend" width="30" height="2" y="229" x="0" style="opacity: 1; fill: rgb(233, 247, 228);"></rect><rect class="legend" width="30" height="2" y="230" x="0" style="opacity: 1; fill: rgb(234, 247, 228);"></rect><rect class="legend" width="30" height="2" y="231" x="0" style="opacity: 1; fill: rgb(235, 247, 229);"></rect><rect class="legend" width="30" height="2" y="232" x="0" style="opacity: 1; fill: rgb(235, 247, 229);"></rect><rect class="legend" width="30" height="2" y="233" x="0" style="opacity: 1; fill: rgb(236, 248, 230);"></rect><rect class="legend" width="30" height="2" y="234" x="0" style="opacity: 1; fill: rgb(237, 248, 231);"></rect><rect class="legend" width="30" height="2" y="235" x="0" style="opacity: 1; fill: rgb(237, 248, 231);"></rect><rect class="legend" width="30" height="2" y="236" x="0" style="opacity: 1; fill: rgb(238, 248, 232);"></rect><rect class="legend" width="30" height="2" y="237" x="0" style="opacity: 1; fill: rgb(239, 249, 232);"></rect><rect class="legend" width="30" height="2" y="238" x="0" style="opacity: 1; fill: rgb(239, 249, 233);"></rect><rect class="legend" width="30" height="2" y="239" x="0" style="opacity: 1; fill: rgb(240, 249, 234);"></rect><rect class="legend" width="30" height="2" y="240" x="0" style="opacity: 1; fill: rgb(241, 249, 234);"></rect><rect class="legend" width="30" height="2" y="241" x="0" style="opacity: 1; fill: rgb(241, 250, 235);"></rect><rect class="legend" width="30" height="2" y="242" x="0" style="opacity: 1; fill: rgb(242, 250, 235);"></rect><rect class="legend" width="30" height="2" y="243" x="0" style="opacity: 1; fill: rgb(242, 250, 236);"></rect><rect class="legend" width="30" height="2" y="244" x="0" style="opacity: 1; fill: rgb(243, 250, 236);"></rect><rect class="legend" width="30" height="2" y="245" x="0" style="opacity: 1; fill: rgb(244, 251, 237);"></rect><rect class="legend" width="30" height="2" y="246" x="0" style="opacity: 1; fill: rgb(244, 251, 238);"></rect><rect class="legend" width="30" height="2" y="247" x="0" style="opacity: 1; fill: rgb(245, 251, 238);"></rect><rect class="legend" width="30" height="2" y="248" x="0" style="opacity: 1; fill: rgb(246, 251, 239);"></rect><rect class="legend" width="30" height="2" y="249" x="0" style="opacity: 1; fill: rgb(246, 252, 239);"></rect></g></svg>
-			</div>
-		</div>
-	</div>
-</div><!--end row-->
-</div>
-</div><!-- end panel -->
-
-<div class="row">
-		<div class="col-xs-12">
-				<input type="submit" value="UPDATE MAP LAYER" class="btn btn-large  btn-primary pull-left" style="width:100%" id="form-button-update-map2" /><br><br>
-		</div>
-</div>
-
-	   </form>
-</div><!--tour colorbar end-->
-		  </div>
-			  </div>
-		</li>
 		
 		<li class="dropdown button-dropdown dropdown-menu">
 		  <a class="dropdown-toggle" href="#" id="downloadDropdown" class="dropdown-toggle" data-toggle="dropdown" role="presentation"  >Download Data<strong class="caret"></strong></a>
@@ -655,25 +459,6 @@ Note: the format for this string is between 3-11 numbers separated by commas.
 			<div class="row">
 		<br>
 		<div id="titleRegion" style="" class="col-xs-12 col-sm-12 col-md-6 col-lg-6"><span style="font-size:15pt"><div style="text-align:center" id="notes"></div></span><span style="font-size:10pt"><div style="text-align:center" id="date_info"></div></span></div>
-			<!-- ***************    -->
-		<!-- Colorbar -->
-		<!-- ***************    -->
-		<div id="colorbarRegion" style="display:none" class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-			<div class="colorbarHTML">
-			<div name="form_colorbar" id="target_colorbar" style="width:100%">
-			<div style="text-align:center">
-				<div id="colorbar" style="display:inline"></div>
-			<div class='eddi' style="display:none">
-			<a id="eddipopover" data-toggle="popover" data-html="true" data-placement="bottom" data-container="body"  data-trigger="focus" tabindex="0" style="height:100px;font-size:11px;font-family:Arial, sans-serif;" style="width: 600px;" rel="popover" data-original-title='USDM Color Scale' data-content='  
-' template=''><img src="images/questionmark.gif"></a>
-			</div>
-				<!--<a href="#" id="save">Save Map</a>
-				<div id="svgdataurl"></div>//-->
-			</div>
-			</div>
-			</div>
-			<div style="text-align:center" id="colorbarLabelOnMap"></div>
-		</div>
 	
 
 		</div>
@@ -699,6 +484,8 @@ Note: the format for this string is between 3-11 numbers separated by commas.
 	
 
 	<!--HIDDEN-->
+
+<div id="alBox"></div>
 	<div id="poly" style="visibility: hidden; display:inline;"></div>
 	 <div id="rectangle" style="visibility: hidden; display:inline;"></div>
 	 <div id="palette" style="visibility: hidden; display:inline;"></div>
@@ -772,28 +559,7 @@ Note: the format for this string is between 3-11 numbers separated by commas.
 </div>
 
 
-	<div class="modal fade" id="downloadURLModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabelLink" aria-hidden="true" style="display: none;">
-	<div class="modal-dialog modal-lg">
-		<div class="modal-content">
-			<!-- HEADER -->
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal">
-				<span aria-hidden="true">×</span>
-				<span class="sr-only">Close</span>
-				</button>
-				<h4 class="modal-title" id="myModalLabelLink">Download  Region of Data:</h4>
-			</div>
-			<div class="modal-body">
-		You can click on th Download Link to get map data with the following URL: 
-	<br><br>	
-		<input id="downloadURL" name="downloadURL" value="" type="text" style="width:100%" readonly="">
-		<a href="https://earthengine.googleapis.com//api/download?docid=0ff614724d86576957740804ce2e7821&amp;token=7df1c0ef4a9b19a5916e3224692a4cb4" id="downloadURLLink">(Go to Link)</a>
-		<!--<br><br>
-		<span style="color:red">Please wait until the Progress Bar has disappeared before going to link</span>-->
-			</div><!--modal-body-->
-		</div><!--modal-content-->
-	</div><!--modal-dialog-->
-</div>
+	
 	 <!--HIDDEN-->
 
 <!--Side Controls-->
@@ -821,32 +587,36 @@ Note: the format for this string is between 3-11 numbers separated by commas.
 		*    LOAD SCRIPTS WINDOW		*
 		*********************************/
 			 -->
+
+
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js" ></script>	
-<script src="../../static/app/scripts/functions_variable.js"></script>
+
 <script type="text/javascript" src="../../static/app/scripts/move-top.js"></script>
 <script type="text/javascript" src="../../static/app/scripts/easing.js"></script>
 <script src="../../static/app/scripts/bootstrap.min.js"></script>
-<script src="../../static/app/scripts/bootstrap-waitingfor.js"></script>
-<script src="../../static/app/scripts/bootstrap-waitingfor.min.js"></script>
-<script src="../../static/app/scripts/waitingfor.js"></script>
-<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js'></script>
-
-
   <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-  <link rel="stylesheet" href="/resources/demos/style.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+ 
+	
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+	 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+  
+	<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js'></script>
+
+
   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-	 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-<script src="../../static/app/scripts/functions_colorbar.js"></script>
-<script src="../../static/app/scripts/drawcolorbars.js"></script>
-<script src="../../static/app/scripts/colorbar.js"></script>
-<script src="../../static/app/scripts/colorbrewer.js"></script>
+
+<script src="../../static/app/scripts/Script.js" type="text/javascript"></script>
+
+	
+<script src="../../static/app/scripts/bootstrap.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
 
 
-
-<!-- start-smoth-scrolling -->
-<!-- for bootstrap working -->
-	<script src="../../static/app/scripts/bootstrap.js"></script>
 <!-- //for bootstrap working -->
 <!-- here stars scrolling icon -->
 	<script type="text/javascript">
@@ -889,77 +659,17 @@ Note: the format for this string is between 3-11 numbers separated by commas.
 		if (selected == "all") {
 			  document.getElementById("boldStuff").innerHTML  = '(Period of Record:1984-01-01 to 2017-03-17)';
 
-	  $("._start-picker, ._end-picker").datepicker("setStartDate",new Date("1984"));
-	  $("._start-picker, ._end-picker").datepicker("setEndDate",new Date());
-		} else if (selected == "5") {
-			  document.getElementById("boldStuff").innerHTML  = ' (Period of Record: 1999 - 05 - 28 to 2017- 03 - 11)';
 
-	  $("._start-picker, ._end-picker").datepicker("setStartDate",new Date("1984"));
-	  $("._start-picker, ._end-picker").datepicker("setEndDate",new Date("2012"));
-
-	  if(parseInt($("._start-picker").val()) > 2012){
-		$("._start-picker").datepicker("update", "2012");
-	  }
-	  if(parseInt($("._end-picker").val()) > 2012){
-		$("._end-picker").datepicker("update", "2012");
-	  }
 		} else if (selected == "7") {
 			  document.getElementById("boldStuff").innerHTML  = '(Period of Record:1984-04-13 to 2011-11-17)';
-
-	  $("._start-picker, ._end-picker").datepicker("setStartDate",new Date("1999"));
-	  $("._start-picker, ._end-picker").datepicker("setEndDate",new Date());
-
-	  if(parseInt($("._start-picker").val()) < 1999){
-		$("._start-picker").datepicker("update", "1999");
-	  }
-	  if(parseInt($("._end-picker").val()) < 1999){
-		$("._end-picker").datepicker("update", "1999");
-	  }
 	} else if (selected == "8") {
 		document.getElementById("boldStuff").innerHTML = '(Period of Record:2013-04-07 to 2017-03-17)';
-	  $("._start-picker, ._end-picker").datepicker("setStartDate",new Date("2013"));
-	  $("._start-picker, ._end-picker").datepicker("setEndDate",new Date());
-
-	  if(parseInt($(".start-picker").val()) < 2013){
-		$(".start-picker").datepicker("update", "2013");
-	  }
-	  if(parseInt($("._end-picker").val()) < 2013){
-		$("._end-picker").datepicker("update", "2013");
-	  }
+	
 	}
   }));
 
 
-	   /*********************************
-		*    SET FORM DISPLAY            *
-		*********************************/
 
-
-		var colorbarsize = '7';
-		var colorbarmap = 'GnBu';
-		var colorbartype = 'discrete';
-		var colorbarMin = '0';
-		var colorbarMax = '1';
-		var palette_update = [];
-
-		changeColorbarMapSize();
-		$('#colorbarsize').val(colorbarsize);
-		$('#colorbarmap').val(colorbarmap);
-		$('#colorbartype').val(colorbartype);
-		$('#minColorbar').val(colorbarMin);
-		$('#maxColorbar').val(colorbarMax);
-
-		
-		
-		
-		/*********************************
-		*     COLORBAR                   *
-		*********************************/
-		redrawSampleColorbar();
-
-	   
-		setColorbarLabel(variable, calculation, varUnits);
-						  
 
 </script> 
 
@@ -1005,9 +715,6 @@ Note: the format for this string is between 3-11 numbers separated by commas.
 
 		<!-- Load our JavaScript file. -->
 	
-<script src="../../static/app/scripts/Script.js" type="text/javascript"></script>
-
-
 
 <!-- //here ends scrolling icon -->
 </body>

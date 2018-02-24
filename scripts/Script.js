@@ -438,41 +438,9 @@ var map = new google.maps.Map(document.getElementById('map'), mapOptions);
 
 
 
-
-var drawingManager = new google.maps.drawing.DrawingManager({
-	drawingMode: google.maps.drawing.OverlayType.POLYGON,
-	drawingControl: true,
-	drawingControlOptions: {
-		position: google.maps.ControlPosition.TOP_LEFT,
-		drawingModes: ['polygon']
-	},
-	circleOptions: {
-		strokeWeight: 0,
-		fillOpacity: 0.45,
-		editable: true,
-		fillColor: '#FF1493'
-	},
-	polygonOptions: polyOptions
-	,
-	rectangleOptions: {
-		strokeWeight: 0,
-		fillOpacity: 0.45,
-		editable: true,
-		fillColor: '#FF1493'
-	}
-});
-drawingManager.setMap(map);
 var poly = null;
 
 var rectangle = null;
-
-google.maps.event.addListener(drawingManager, 'rectanglecomplete', function (event) {
-	rectangle = event.overlay;
-	drawingManager.setOptions({ drawingMode: null });
-
-	document.getElementById("rectangle").innerHTML = getCoordinates(rectangle)
-});
-
 
 
 getPolygonCoordinates = function () {
@@ -490,26 +458,25 @@ getPolygonCoordinates = function () {
 var twoDimensionalArray;
 
 var shapepoly;
-google.maps.event.addListener(drawingManager, 'polygoncomplete', function (polygon) {
-	twoDimensionalArray = null;
-	shapepoly = null;
-	drawingManager.setDrawingMode(null);
-	var arr = [];
+//google.maps.event.addListener(drawingManager, 'polygoncomplete', function (polygon) {
+//	twoDimensionalArray = null;
+//	shapepoly = null;
+//	var arr = [];
 
-	var points = polygon.getPath().getArray();
-	shapepoly = polygon;
-	twoDimensionalArray = points.map(function (point) {
-		return [point.lng(), point.lat()];
-	});
+//	var points = polygon.getPath().getArray();
+//	shapepoly = polygon;
+//	twoDimensionalArray = points.map(function (point) {
+//		return [point.lng(), point.lat()];
+//	});
 
-	document.getElementById("rectangle").innerHTML = JSON.stringify(twoDimensionalArray);
-	poly = twoDimensionalArray;
-	getpoly = twoDimensionalArray;
+//	document.getElementById("rectangle").innerHTML = JSON.stringify(twoDimensionalArray);
+//	poly = twoDimensionalArray;
+//	getpoly = twoDimensionalArray;
 
-	document.getElementById("poly").innerHTML = points;
+//	document.getElementById("poly").innerHTML = points;
 
 
-});
+//});
 
 var shapecircle;
 
@@ -524,26 +491,6 @@ function getCoordinates(rect) {
 	].join(',');
 }
 
-google.maps.event.addListener(drawingManager, 'circlecomplete', function (circle) {
-	twoDimensionalArray = null;
-	shapecircle = null;
-	drawingManager.setDrawingMode(null);
-	var arr = [];
-	var points = getCoordinates(circle);
-	arr.push(points)
-	alert(arr.length);
-	twoDimensionalArray = arr.map(function (point) {
-		return [point];
-	});
-	shapecircle = circle;
-
-
-	alert(twoDimensionalArray);
-
-
-
-
-});
 
 
 clearPolygon = function (currentPolygon) {
@@ -689,31 +636,6 @@ function put_sliderOnMap() {
 	set_opacity(parseFloat($('#opacity').val()));
 };
 
-function action_downloadMap(downloadURL) {
-
-	if (downloadURL != null) {
-
-		$("#downloadURL").val(downloadURL);
-
-		$("#downloadURLLink").attr("href", downloadURL);
-		$("#downloadURLModal").click();
-		$("#downloadURLModal").modal('show');
-
-
-	} else {
-		if (submitType == 'shareLink') {
-			$('#generalErrorMessage').html('Your URL is not valid:<br> ' + error_message.form_error);
-			$('#generalCauseMessage').html('<li>Your URL address may be out-dated or incorrect.</li>');
-			$('#generalResolutionMessage').html('<li>You might generate your URL again from the current version of Climate Engine.</li>');
-			$('#generalErrorModal').modal('show');
-		} else {
-			$('#downloadErrorMessage').html(error_message.form_error);
-			$('#downloadErrorModal').modal('show');
-		};
-	};
-};
-
-
 
 function set_opacity(opacity) {
 	opacity_tooltip.text(Math.round(opacity * 100) + "% Opacity");
@@ -732,19 +654,183 @@ function set_opacity(opacity) {
 
 
 
+function addlayer(name) {
+
+
+	var layer = new google.maps.FusionTablesLayer({
+		query: {
+			select: 'geometry',
+			from: '1wF4uSA3CSYaCa9g93FRNXcL01-ThklMXRu92h-Vr',
+			where: "name IN ('" + name + "')"
+
+
+		},
+		styles: [{
+			polygonOptions: {
+				fillColor: '#4408ea',
+				fillOpacity: 0.4
+			}
+
+		}]
+	});
+
+	return layer
+}
+
+
+var layer;
+
+$('#region1').change(function () {
+
+
+	var eventTypeName = $("#region1 option:selected").val();
+	console.log(eventTypeName)
+	var storeName = eventTypeName.replace(/'/g, '\\\'');
+
+	if (layer != null) {
+
+
+
+		layer.setMap(null);
+
+	}
+
+
+	layer = addlayer(storeName)
+
+
+	layer.setMap(map)
+
+
+})
+
+
+
+
+var marker_point;
+
+$('#marker_decide').click(function (event) {
+
+
+	var marker = new google.maps.Marker({
+		position: Ghana,
+		draggable: true,
+		animation: google.maps.Animation.DROP,
+		map: map
+	});
+
+
+
+	marker_point = [parseFloat(marker.getPosition().lng().toFixed(6)), parseFloat(marker.getPosition().lat().toFixed(6))];
+
+	$('#savedata').val(marker_point);
+
+
+	google.maps.event.addListener(marker, "dragend", function () {
+
+		marker_point = [parseFloat(marker.getPosition().lng().toFixed(6)), parseFloat(marker.getPosition().lat().toFixed(6))];
+		$("#savedata").val(marker_point)
+
+	});
+
+
+	var contentString = '<div> <h3>Region Of Interest(ROI)</h3> <br/> <p>Drag the Red Marker To the an area of interest to perform timeseries on</p> <br/> <p> ROI must be within  Ghana</p>   </div>';
+
+
+
+	var infowindow = new google.maps.InfoWindow({
+		content: contentString
+	});
+	infowindow.open(map, marker);
+
+})
+
+
+
+
+
+var drawingManager;
+
+$('#poly_map').click(function () {
+
+	window.drawingManager = new google.maps.drawing.DrawingManager({
+		drawingMode: google.maps.drawing.OverlayType.POLYGON,
+		drawingControl: true,
+		drawingControlOptions: {
+			position: google.maps.ControlPosition.LEFT_TOP,
+			drawingModes: ['polygon']
+		},
+		circleOptions: {
+			strokeWeight: 0,
+			fillOpacity: 0.45,
+			editable: true,
+			fillColor: '#FF1493'
+		},
+		polygonOptions: polyOptions
+
+	});
+
+	//map.overlayMapTypes.clear()
+
+
+
+	drawingManager.setMap(map);
+
+
+	google.maps.event.addListener(drawingManager, 'polygoncomplete', function (polygon) {
+		twoDimensionalArray = null;
+		shapepoly = null;
+		drawingManager.setDrawingMode(null);
+		var arr = [];
+
+		var points = polygon.getPath().getArray();
+		shapepoly = polygon;
+		twoDimensionalArray = points.map(function (point) {
+			return [point.lng(), point.lat()];
+		});
+
+
+	});
+
+})
+
+
+
+
+
+
+
+
 
 $(document).on('submit', '#user_download', function (e) {
 	e.preventDefault();
-	// document.getElementById("overlay").style.display = "block";
 
-	// waitingDialog.show('Processing Request', 'Computing  may take a few minutes.', { dialogSize: 'sm', progressType: 'warning' });
-	// waitingDialog.show('Processing Request', 'Computing  may take a few minutes.', { dialogSize: 'sm', progressType: 'warning' }); setTimeout(function () { waitingDialog.hide(); }, 2000);
+	waitingDialog.show('This Computation Requires large Computing power and might take some time', {
 
-	waitingDialog.show('Downloading Data', { dialogSize: 'sm', progressType: 'warning' });
+		// if the option is set to boolean false, it will hide the header and "message" will be set in a paragraph above the progress bar.
+		// When headerText is a not-empty string, "message" becomes a content above the progress bar and headerText string will be set as a text inside the H3;
+		headerText: 'Computing Data',
 
-	setTimeout(function () {
-		waitingDialog.hide();
-	}, 5000);
+		// this will generate a heading corresponding to the size number
+		headerSize: 4,
+
+		// extra class(es) for the header tag
+		headerClass: '',
+
+		// bootstrap postfix for dialog size, e.g. "sm", "m"
+		dialogSize: 'lg',
+
+		// bootstrap postfix for progress bar type, e.g. "success", "warning";
+		progressType: 'success',
+
+		// determines the tag of the content element
+		contentElement: 'p',
+
+		// extra class(es) for the content tag
+		contentClass: 'content'
+
+	});
+	
 	$.ajax({
 		type: 'POST',
 		url: '/download_data',
@@ -755,6 +841,7 @@ $(document).on('submit', '#user_download', function (e) {
 			end: $('#end').val().trim(),
 			cloudscore: $("#cloudscore").val(),
 			region: JSON.stringify(twoDimensionalArray),
+			region_selected: $("#region1 option:selected").val().replace(/'/g, '\\\''),
 			scale: document.getElementById('scale').value,
 			name: document.getElementById('downloadFilename').value,
 			download: document.getElementById("rectangle").innerHTML,
@@ -770,32 +857,206 @@ $(document).on('submit', '#user_download', function (e) {
 				dataType: 'json',
 				success: function (data) {
 
-					if (shapecircle != null) {
+					map.overlayMapTypes.clear();
+					if (data.error == null) {
 
-						clearCircle(shapecircle);
 
-					} else if (shapepoly != null) {
-						clearPolygon(shapepoly);
+						waitingDialog.hide();
+
+
+						if (layer != null) {
+
+
+
+							layer.setMap(null);
+
+						}
+
+
+						if (shapepoly != null) {
+							clearPolygon(shapepoly);
+						}
+
+						twoDimensionalArray = null;
+
+						//set url
+						var url = data.download_data;
+
+						$("#alBox").aldownload({
+
+							// default, success, warning, error
+							context: "default",
+
+							text: {
+
+								// The title bar of your alert
+								title: "Donwload",
+
+								// The more verbose description of the alert.
+								description: 'CLICK THE BUTTON BELLOW TO DONWLOAD',
+
+								hr: '',
+								download: "DOWNLOAD DATA",
+								// The text of the "dismiss" button
+								dismiss: "DISMISS",
+								url: url
+							},
+
+							classes: {
+
+								// Classes to be added to #alBox
+								container: "",
+
+								// Classes to be added to #alBox-panel
+								panel: "",
+
+								// Classes to be added to #alBox-title
+								title: "",
+
+								// Classes to be added to #alBox-description
+								description: "",
+								download: "",
+
+								// Classes to be added to the hr element above the dismiss button
+								hr: "",
+
+								// Classes to be added to the dismiss button
+								dismiss: ""
+							},
+
+							// The number of seconds your alert will appear. 
+							// Can also define as "infinite" to stay on screen until dismissal.
+							seconds: "infinite",
+
+							// URL Location to redirect after the alert is done
+							redirect: ''
+
+						});
+
+
+
+
+
+					} else {
+
+
+						if (layer != null) {
+
+
+
+							layer.setMap(null);
+
+						}
+
+
+						if (shapepoly != null) {
+							clearPolygon(shapepoly);
+						}
+
+						twoDimensionalArray = null;
+						waitingDialog.hide();
+						$("#alBox").al({
+
+							// default, success, warning, error
+							context: "default",
+
+							text: {
+
+								// The title bar of your alert
+								title: "Error Computing Data",
+
+								// The more verbose description of the alert.
+								description: data.error,
+
+								hr: "",
+								// The text of the "dismiss" button
+								dismiss: "DISMISS"
+							},
+
+							classes: {
+
+								// Classes to be added to #alBox
+								container: "",
+
+								// Classes to be added to #alBox-panel
+								panel: "",
+
+								// Classes to be added to #alBox-title
+								title: "",
+
+								// Classes to be added to #alBox-description
+								description: "",
+
+								// Classes to be added to the hr element above the dismiss button
+								hr: "",
+
+								// Classes to be added to the dismiss button
+								dismiss: ""
+							},
+
+							// The number of seconds your alert will appear. 
+							// Can also define as "infinite" to stay on screen until dismissal.
+							seconds: "infinite",
+
+							// URL Location to redirect after the alert is done
+							redirect: ""
+
+						});
+
+
+
 					}
 
-					twoDimensionalArray = null;
-					//set url
-					var url = data.download_data;
-					action_downloadMap(url);
-
-
-
-
-
-
-
-
-
-
-					waitingDialog.hide();
 				},
 				error: function () {
-					alert("Not Good");
+					waitingDialog.hide();
+					$("#alBox").al({
+
+						// default, success, warning, error
+						context: "default",
+
+						text: {
+
+							// The title bar of your alert
+							title: "Error Computing Data",
+
+							// The more verbose description of the alert.
+							description: "Could Not COmpute Data",
+
+							hr: "",
+							// The text of the "dismiss" button
+							dismiss: "DISMISS"
+						},
+
+						classes: {
+
+							// Classes to be added to #alBox
+							container: "",
+
+							// Classes to be added to #alBox-panel
+							panel: "",
+
+							// Classes to be added to #alBox-title
+							title: "",
+
+							// Classes to be added to #alBox-description
+							description: "",
+
+							// Classes to be added to the hr element above the dismiss button
+							hr: "",
+
+							// Classes to be added to the dismiss button
+							dismiss: ""
+						},
+
+						// The number of seconds your alert will appear. 
+						// Can also define as "infinite" to stay on screen until dismissal.
+						seconds: "infinite",
+
+						// URL Location to redirect after the alert is done
+						redirect: ""
+
+					});
 				}
 
 
@@ -803,7 +1064,54 @@ $(document).on('submit', '#user_download', function (e) {
 
 		},
 		error: function (data) {
-			console.log(data.startdate)
+			waitingDialog.hide();
+			$("#alBox").al({
+
+				// default, success, warning, error
+				context: "default",
+
+				text: {
+
+					// The title bar of your alert
+					title: "Error Computing Data",
+
+					// The more verbose description of the alert.
+					description: "Could Not COmpute Data",
+
+					hr: "",
+					// The text of the "dismiss" button
+					dismiss: "DISMISS"
+				},
+
+				classes: {
+
+					// Classes to be added to #alBox
+					container: "",
+
+					// Classes to be added to #alBox-panel
+					panel: "",
+
+					// Classes to be added to #alBox-title
+					title: "",
+
+					// Classes to be added to #alBox-description
+					description: "",
+
+					// Classes to be added to the hr element above the dismiss button
+					hr: "",
+
+					// Classes to be added to the dismiss button
+					dismiss: ""
+				},
+
+				// The number of seconds your alert will appear. 
+				// Can also define as "infinite" to stay on screen until dismissal.
+				seconds: "infinite",
+
+				// URL Location to redirect after the alert is done
+				redirect: ""
+
+			});
 		}
 
 	});
@@ -817,16 +1125,31 @@ $(document).on('submit', '#user_download', function (e) {
 
 $(document).on('submit', '#user_form', function (e) {
 	e.preventDefault();
-	// document.getElementById("overlay").style.display = "block";
+	waitingDialog.show('This Computation Requires large Computing power and might take some time', {
 
-	// waitingDialog.show('Processing Request', 'Computing  may take a few minutes.', { dialogSize: 'sm', progressType: 'warning' });
-	// waitingDialog.show('Processing Request', 'Computing  may take a few minutes.', { dialogSize: 'sm', progressType: 'warning' }); setTimeout(function () { waitingDialog.hide(); }, 2000);
+		// if the option is set to boolean false, it will hide the header and "message" will be set in a paragraph above the progress bar.
+		// When headerText is a not-empty string, "message" becomes a content above the progress bar and headerText string will be set as a text inside the H3;
+		headerText: 'Computing Data',
 
-	waitingDialog.show('Processing Request', { dialogSize: 'sm', progressType: 'warning' });
+		// this will generate a heading corresponding to the size number
+		headerSize: 4,
 
-	setTimeout(function () {
-		waitingDialog.hide();
-	}, 5000);
+		// extra class(es) for the header tag
+		headerClass: '',
+
+		// bootstrap postfix for dialog size, e.g. "sm", "m"
+		dialogSize: 'lg',
+
+		// bootstrap postfix for progress bar type, e.g. "success", "warning";
+		progressType: 'success',
+
+		// determines the tag of the content element
+		contentElement: 'p',
+
+		// extra class(es) for the content tag
+		contentClass: 'content'
+
+	});
 	$.ajax({
 		type: 'POST',
 		url: '/calc_data',
@@ -837,6 +1160,7 @@ $(document).on('submit', '#user_form', function (e) {
 			end: $('#end').val().trim(),
 			cloudscore: $("#cloudscore").val(),
 			region: JSON.stringify(twoDimensionalArray),
+			region_selected: $("#region1 option:selected").val().replace(/'/g, '\\\''),
 			scale: null,
 			name: 'something',
 			download: document.getElementById("rectangle").innerHTML,
@@ -844,61 +1168,165 @@ $(document).on('submit', '#user_form', function (e) {
 
 		},
 		success: function () {
+			map.overlayMapTypes.clear();
 
-
-			marker.setMap(null);
 			$.ajax({
 				method: "GET",
 				url: '/calc_data',
 				dataType: 'json',
 				success: function (data) {
-					map.overlayMapTypes.clear();
-					if (shapecircle != null) {
 
-						clearCircle(shapecircle);
+					if (data.error == null) {
 
-					} else if (shapepoly != null) {
-						clearPolygon(shapepoly);
+
+						if (layer != null) {
+
+
+
+							layer.setMap(null);
+
+						}
+	
+
+						if (shapepoly != null) {
+							clearPolygon(shapepoly);
+						}
+
+						
+						mapType = new google.maps.ImageMapType(updateMapTileOptions(data.mapid, data.token));
+						twoDimensionalArray = null;
+
+
+
+						// Add the EE layer to the map.
+
+						map.overlayMapTypes.push(mapType);
+						document.getElementById("date_info").innerHTML = data.collection_info + "  " + data.date_info
+						document.getElementById("notes").innerHTML = data.notes
+
+
+
+
+						//adjust transparency to that set (EE gives 100% back)
+						// mapType.setOpacity(parseFloat($('#opacity').val()));
+
+						//replace map layer of layer=0, else they could accumulate
+						map.overlayMapTypes.setAt(0, mapType);
+
+						//Add opacity slider on map
+						put_sliderOnMap();
+						map.controls[google.maps.ControlPosition.RIGHT_TOP].push(opacity_slider);
+
+						waitingDialog.hide();
+
+
+					} else {
+						map.overlayMapTypes.clear();
+						waitingDialog.hide();
+						$("#alBox").al({
+
+							// default, success, warning, error
+							context: "default",
+
+							text: {
+
+								// The title bar of your alert
+								title: "Error Computing Data" ,
+
+								// The more verbose description of the alert.
+								description: data.error,
+
+								hr: "",
+								// The text of the "dismiss" button
+								dismiss: "DISMISS"
+							},
+
+							classes: {
+
+								// Classes to be added to #alBox
+								container: "",
+
+								// Classes to be added to #alBox-panel
+								panel: "",
+
+								// Classes to be added to #alBox-title
+								title: "",
+
+								// Classes to be added to #alBox-description
+								description: "",
+
+								// Classes to be added to the hr element above the dismiss button
+								hr: "",
+
+								// Classes to be added to the dismiss button
+								dismiss: ""
+							},
+
+							// The number of seconds your alert will appear. 
+							// Can also define as "infinite" to stay on screen until dismissal.
+							seconds: "infinite",
+
+							// URL Location to redirect after the alert is done
+							redirect: ""
+
+						});
+
+
+
+
 					}
-					mapType = new google.maps.ImageMapType(updateMapTileOptions(data.mapid, data.token));
-					twoDimensionalArray = null;
 
-
-
-					// Add the EE layer to the map.
-
-					map.overlayMapTypes.push(mapType);
-					document.getElementById("date_info").innerHTML = data.collection_info + "  " + data.date_info
-					document.getElementById("notes").innerHTML = data.notes
-
-
-
-
-					//adjust transparency to that set (EE gives 100% back)
-					// mapType.setOpacity(parseFloat($('#opacity').val()));
-
-					//replace map layer of layer=0, else they could accumulate
-					map.overlayMapTypes.setAt(0, mapType);
-
-					//Add opacity slider on map
-					put_sliderOnMap();
-					map.controls[google.maps.ControlPosition.RIGHT_TOP].push(opacity_slider);
-
-
-
-					// document.getElementById("overlay").style.display = "none";
-
-					//Set colorbar
-					if ($('#colorbarLabelOnMap')) {
-						$('#colorbarLabelOnMap').html($('#colorbarLabel').val());
-					}
-					drawMapColorbar();
-					$('#colorbarRegion').show();
-
-					waitingDialog.hide();
 				},
 				error: function () {
-					alert("Not Good");
+					waitingDialog.hide();
+					$("#alBox").al({
+
+						// default, success, warning, error
+						context: "default",
+
+						text: {
+
+							// The title bar of your alert
+							title: "Error Computing Data",
+
+							// The more verbose description of the alert.
+							description: "Could Not Compute Data. An Error Occured",
+
+							hr: "",
+							// The text of the "dismiss" button
+							dismiss: "DISMISS"
+						},
+
+						classes: {
+
+							// Classes to be added to #alBox
+							container: "",
+
+							// Classes to be added to #alBox-panel
+							panel: "",
+
+							// Classes to be added to #alBox-title
+							title: "",
+
+							// Classes to be added to #alBox-description
+							description: "",
+
+							// Classes to be added to the hr element above the dismiss button
+							hr: "",
+
+							// Classes to be added to the dismiss button
+							dismiss: ""
+						},
+
+						// The number of seconds your alert will appear. 
+						// Can also define as "infinite" to stay on screen until dismissal.
+						seconds: "infinite",
+
+						// URL Location to redirect after the alert is done
+						redirect: ""
+
+					});
+
 				}
 
 
@@ -906,101 +1334,54 @@ $(document).on('submit', '#user_form', function (e) {
 
 		},
 		error: function (data) {
-			console.log(data.startdate)
-		}
+			waitingDialog.hide();
+			$("#alBox").al({
 
-	});
+				// default, success, warning, error
+				context: "default",
 
-});
+				text: {
 
+					// The title bar of your alert
+					title: "Error Computing Data",
 
+					// The more verbose description of the alert.
+					description: "Could Not Compute Data. An Error Occured",
 
-
-$(document).on('submit', '#update_form', function (e) {
-	e.preventDefault();
-	// document.getElementById("overlay").style.display = "block";
-
-	// waitingDialog.show('Processing Request', 'Computing  may take a few minutes.', { dialogSize: 'sm', progressType: 'warning' });
-	// waitingDialog.show('Processing Request', 'Computing  may take a few minutes.', { dialogSize: 'sm', progressType: 'warning' }); setTimeout(function () { waitingDialog.hide(); }, 2000);
-
-	waitingDialog.show('Processing Request', { dialogSize: 'sm', progressType: 'warning' });
-
-	setTimeout(function () {
-		waitingDialog.hide();
-	}, 5000);
-	$.ajax({
-		type: 'POST',
-		url: '/update_palette',
-		data: {
-			dataset: $('#dataset').val(),
-			datasource: $('#datasource').val(),
-			start: $('#start').val().replace(/\s+/g, ''),
-			end: $('#end').val().trim(),
-			cloudscore: $("#cloudscore").val(),
-			region: JSON.stringify(twoDimensionalArray),
-			palette: JSON.stringify(document.getElementById('palette').innerHTML),
-			csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
-
-		},
-		success: function () {
-			marker.setMap(null);
-			$.ajax({
-				method: "GET",
-				url: '/update_palette',
-				dataType: 'json',
-				success: function (data) {
-					map.overlayMapTypes.clear();
-					if (shapecircle != null) {
-
-						clearCircle(shapecircle);
-
-					} else if (shapepoly != null) {
-						clearPolygon(shapepoly);
-					}
-					mapType = new google.maps.ImageMapType(updateMapTileOptions(data.mapid, data.token));
-					twoDimensionalArray = null;
-					// Add the EE layer to the map.
-
-					map.overlayMapTypes.push(mapType);
-					document.getElementById("date_info").innerHTML = data.collection_info + "  " + data.date_info
-					document.getElementById("notes").innerHTML = data.notes
-
-
-
-
-					//adjust transparency to that set (EE gives 100% back)
-					// mapType.setOpacity(parseFloat($('#opacity').val()));
-
-					//replace map layer of layer=0, else they could accumulate
-					map.overlayMapTypes.setAt(0, mapType);
-
-					//Add opacity slider on map
-					put_sliderOnMap();
-					map.controls[google.maps.ControlPosition.RIGHT_TOP].push(opacity_slider);
-
-
-
-					// document.getElementById("overlay").style.display = "none";
-
-					//Set colorbar
-					if ($('#colorbarLabelOnMap')) {
-						$('#colorbarLabelOnMap').html($('#colorbarLabel').val());
-					}
-					drawMapColorbar();
-					$('#colorbarRegion').show();
-
-					waitingDialog.hide();
+					hr: "",
+					// The text of the "dismiss" button
+					dismiss: "DISMISS"
 				},
-				error: function () {
-					alert("Not Good");
-				}
 
+				classes: {
 
-			})
+					// Classes to be added to #alBox
+					container: "",
 
-		},
-		error: function (data) {
-			console.log(data.startdate)
+					// Classes to be added to #alBox-panel
+					panel: "",
+
+					// Classes to be added to #alBox-title
+					title: "",
+
+					// Classes to be added to #alBox-description
+					description: "",
+
+					// Classes to be added to the hr element above the dismiss button
+					hr: "",
+
+					// Classes to be added to the dismiss button
+					dismiss: ""
+				},
+
+				// The number of seconds your alert will appear. 
+				// Can also define as "infinite" to stay on screen until dismissal.
+				seconds: "infinite",
+
+				// URL Location to redirect after the alert is done
+				redirect: ""
+
+			});
 		}
 
 	});
@@ -1020,37 +1401,54 @@ var marker = new google.maps.Marker({
 });
 
 var marker_point;
+
 google.maps.event.addListener(marker, 'dragend', function (evt) {
 
 	marker_point = [parseFloat(evt.latLng.lng().toFixed(6)), parseFloat(evt.latLng.lat().toFixed(6))];
 	console.log(marker_point);
 });
 
-
-$('#marker_decide').click(function () {
-
-
-	// To add the marker to the map, call setMap();
-	marker.setMap(map);
-
-
-
-	$('#chart_submit').prop('disabled', false);
+// Sets the map on all markers in the array.  
+function setMapOnAll(map) {
+	for (var i = 0; i < marker.length; i++) {
+		marker[i].setMap(map);
+	}
+}
 
 
-})
-
+function clearMarkers() {
+	setMapOnAll(null);
+}
 
 //chart
 
 $(document).on('submit', '#chart_form', function (e) {
 	e.preventDefault();
-	// document.getElementById("overlay").style.display = "block";
+	waitingDialog.show('This Computation Requires large Computing power and might take some time', {
 
-	// waitingDialog.show('Processing Request', 'Computing  may take a few minutes.', { dialogSize: 'sm', progressType: 'warning' });
-	// waitingDialog.show('Processing Request', 'Computing  may take a few minutes.', { dialogSize: 'sm', progressType: 'warning' }); setTimeout(function () { waitingDialog.hide(); }, 2000);
+		// if the option is set to boolean false, it will hide the header and "message" will be set in a paragraph above the progress bar.
+		// When headerText is a not-empty string, "message" becomes a content above the progress bar and headerText string will be set as a text inside the H3;
+		headerText: 'Computing Data',
 
-	waitingDialog.show('Processing Request', { dialogSize: 'sm', progressType: 'warning' });
+		// this will generate a heading corresponding to the size number
+		headerSize: 4,
+
+		// extra class(es) for the header tag
+		headerClass: '',
+
+		// bootstrap postfix for dialog size, e.g. "sm", "m"
+		dialogSize: 'lg',
+
+		// bootstrap postfix for progress bar type, e.g. "success", "warning";
+		progressType: 'success',
+
+		// determines the tag of the content element
+		contentElement: 'p',
+
+		// extra class(es) for the content tag
+		contentClass: 'content'
+
+	});
 
 	setTimeout(function () {
 		waitingDialog.hide();
@@ -1065,74 +1463,182 @@ $(document).on('submit', '#chart_form', function (e) {
 			end: $('#end').val().trim(),
 			cloudscore: $("#cloudscore").val(),
 			region: JSON.stringify(twoDimensionalArray),
+			region_selected: $("#region1 option:selected").val().replace(/'/g, '\\\''),
 			palette: JSON.stringify(document.getElementById('palette').innerHTML),
 			chart_point: JSON.stringify(marker_point),
 			csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
 
 		},
-		success: function () {
-
-
-
-			$('#graphDropdown').click();
+		success: function () {		
 			$.ajax({
 				method: "GET",
 				url: '/chart_data',
 				dataType: 'json',
 				success: function (data) {
-
-					graph = data.timeSeriesData[0]['Data']
-
-					time_d = [];
-					data_f = [];
-					for (var i = 0; i < graph.length; i++) {
-
-						time_d.push(graph[i][0]);
-						data_f.push(graph[i][1])
-					}
-					// create chart here
-
-					var dataf = [
-						{
-							x: time_d,
-							y: data_f,
-							type: 'scatter',
-							marker: {
-								color: 'rgb(255, 0, 0)'
-							}
-							,
-							name: 'Time Series'
-
-						}
-					];
-					var layout = {
-						title: data.notes_time,
-						xaxis: {
-							title: 'Date',
-							titlefont: {
-								family: 'Courier New, monospace',
-								size: 18,
-								color: '#7f7f7f'
-							}
-						},
-						yaxis: {
-							title: data.product_time + ' Values',
-							titlefont: {
-								family: 'Courier New, monospace',
-								size: 18,
-								color: '#7f7f7f'
-							}
-						}
-					};
-					Plotly.newPlot('myDiv', dataf, layout);
-
-
-
-
 					waitingDialog.hide();
+					if (data.error == null) {
+						
+
+
+						if (layer != null) {
+
+
+
+							layer.setMap(null);
+
+						}
+
+
+						clearMarkers();
+
+						$('#graphDropdown').click();
+						graph = data.timeSeriesData[0]['Data']
+
+						time_d = [];
+						data_f = [];
+						for (var i = 0; i < graph.length; i++) {
+
+							time_d.push(graph[i][0]);
+							data_f.push(graph[i][1])
+						}
+						// create chart here
+
+						var dataf = [
+							{
+								x: time_d,
+								y: data_f,
+								type: 'scatter',
+								marker: {
+									color: 'rgb(255, 0, 0)'
+								}
+								,
+								name: 'Time Series'
+
+							}
+						];
+						var layout = {
+							title: data.notes_time,
+							xaxis: {
+								title: 'Date',
+								titlefont: {
+									family: 'Courier New, monospace',
+									size: 18,
+									color: '#7f7f7f'
+								}
+							},
+							yaxis: {
+								title: data.product_time + ' Values',
+								titlefont: {
+									family: 'Courier New, monospace',
+									size: 18,
+									color: '#7f7f7f'
+								}
+							}
+						};
+						Plotly.newPlot('myDiv', dataf, layout);
+
+					} else {
+	
+						$("#alBox").al({
+
+							// default, success, warning, error
+							context: "default",
+
+							text: {
+
+								// The title bar of your alert
+								title: "Error Computing Data",
+
+								// The more verbose description of the alert.
+								description: data.error,
+
+								hr: "",
+								// The text of the "dismiss" button
+								dismiss: "DISMISS"
+							},
+
+							classes: {
+
+								// Classes to be added to #alBox
+								container: "",
+
+								// Classes to be added to #alBox-panel
+								panel: "",
+
+								// Classes to be added to #alBox-title
+								title: "",
+
+								// Classes to be added to #alBox-description
+								description: "",
+
+								// Classes to be added to the hr element above the dismiss button
+								hr: "",
+
+								// Classes to be added to the dismiss button
+								dismiss: ""
+							},
+
+							// The number of seconds your alert will appear. 
+							// Can also define as "infinite" to stay on screen until dismissal.
+							seconds: "infinite",
+
+							// URL Location to redirect after the alert is done
+							redirect: ""
+
+						});
+					}
+
+
 				},
 				error: function () {
-					alert("Not Good");
+					waitingDialog.hide();
+					$("#alBox").al({
+
+						// default, success, warning, error
+						context: "default",
+
+						text: {
+
+							// The title bar of your alert
+							title: "Error Computing Data",
+
+							// The more verbose description of the alert.
+							description: "Cloud Not Compute Data",
+
+							hr: "",
+							// The text of the "dismiss" button
+							dismiss: "DISMISS"
+						},
+
+						classes: {
+
+							// Classes to be added to #alBox
+							container: "",
+
+							// Classes to be added to #alBox-panel
+							panel: "",
+
+							// Classes to be added to #alBox-title
+							title: "",
+
+							// Classes to be added to #alBox-description
+							description: "",
+
+							// Classes to be added to the hr element above the dismiss button
+							hr: "",
+
+							// Classes to be added to the dismiss button
+							dismiss: ""
+						},
+
+						// The number of seconds your alert will appear. 
+						// Can also define as "infinite" to stay on screen until dismissal.
+						seconds: "infinite",
+
+						// URL Location to redirect after the alert is done
+						redirect: ""
+
+					});
 				}
 
 
@@ -1140,9 +1646,404 @@ $(document).on('submit', '#chart_form', function (e) {
 
 		},
 		error: function (data) {
-			console.log(data.startdate)
+			waitingDialog.hide();
+			$("#alBox").al({
+
+				// default, success, warning, error
+				context: "default",
+
+				text: {
+
+					// The title bar of your alert
+					title: "Error Computing Data",
+
+					// The more verbose description of the alert.
+					description: "Cloud Not Compute Data",
+
+					hr: "",
+					// The text of the "dismiss" button
+					dismiss: "DISMISS"
+				},
+
+				classes: {
+
+					// Classes to be added to #alBox
+					container: "",
+
+					// Classes to be added to #alBox-panel
+					panel: "",
+
+					// Classes to be added to #alBox-title
+					title: "",
+
+					// Classes to be added to #alBox-description
+					description: "",
+
+					// Classes to be added to the hr element above the dismiss button
+					hr: "",
+
+					// Classes to be added to the dismiss button
+					dismiss: ""
+				},
+
+				// The number of seconds your alert will appear. 
+				// Can also define as "infinite" to stay on screen until dismissal.
+				seconds: "infinite",
+
+				// URL Location to redirect after the alert is done
+				redirect: ""
+
+			});
 		}
 
 	});
 
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+if (typeof jQuery == 'undefined') {
+	console.log("jQuery library is not found.");
+} else {
+
+	// TODO: Add general library information/comments
+	// TODO: Add grunt/gulp to the project
+	(function ($) {
+
+		var timer = null;
+
+		$.fn.aldownload = function (options) {
+
+			// Define defaults
+			var defaults = {
+				context: "default",
+				text: {
+					title: "TITLE",
+					description: "DESCRIPTION",
+					dismiss: "DISMISS",
+					download: "DOWNLOAD DATA",
+					url: ""
+				},
+				classes: {
+					container: "",
+					panel: "",
+					title: "",
+					description: "",
+					download: "",
+					hr: "",
+					dismiss: ""
+				},
+				seconds: "infinite",
+				redirect: ""
+			};
+
+			// Build settings, merging defaults and options
+			var settings = $.extend(true, {}, defaults, options);
+
+			// Build the alBoxPanel
+			var html = '<div id="alBox-panel" class="alBox-panel-' + settings.context + ' ' + settings.classes.panel + '">';
+			html += '<span id="alBox-title" class="' + settings.classes.title + '">' + settings.text.title + '</span>';
+			html += '<span id="alBox-description"  class="' + settings.classes.description + '">' + settings.text.description + '</span>';
+			html += '<hr class="' + settings.classes.hr + '"/>';
+			html += '<button id="alBox-download" class="' + settings.classes.download + '">' + settings.text.download + '</button>';
+			html += '<button id="alBox-dismiss" class="' + settings.classes.dismiss + '">' + settings.text.dismiss + '</button>';
+			html += '</div>';
+
+			// Place into DOM
+			this.html(html);
+
+			if (settings.classes.container != "") {
+				$("#alBox").addClass(settings.classes.container);
+			}
+
+			// Add the click handler for the dismiss button
+			$("#alBox-dismiss").click(clearAl);
+			$("#alBox-download").click(openurl)
+			// Click handler for clicking outside the prompt box
+			$("#alBox").click(dismiss);
+
+			// Fade in the alert box
+			this.fadeIn();
+			function openurl() {
+				window.open(settings.text.url);
+
+			}
+			// If seconds isn't "infinite" set a timer to clear the box
+			if (settings.seconds !== "infinite") {
+				timer = setInterval(function () {
+					clearTimeout(timer);
+					clearAl();
+					timer = null;
+				}, settings.seconds * 1000);
+			}
+
+			// Preserve chaining
+			return this;
+		};
+
+		/**
+		 * Dismiss only if the panel, title, description not part of the click event
+		 * @param e: event
+		 */
+		function dismiss(e) {
+			e.preventDefault();
+			if (!$(e.target).is('#alBox-panel')
+				&& !$(e.target).is('#alBox-title')
+				&& !$(e.target).is('#alBox-description')) {
+
+				// Clear the alert box
+				// clearAl();
+			}
+		}
+
+		/**
+		 * Function that will clear the interval, fade the alert out
+		 * and remove the HTML structure from the container
+		 */
+		function clearAl() {
+			clearInterval(timer);
+			$("#alBox").fadeOut();
+			$("#alBox").html('');
+
+		}
+
+
+
+
+
+	}(jQuery));
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+if (typeof jQuery == 'undefined') {
+	console.log("jQuery library is not found.");
+} else {
+
+	// TODO: Add general library information/comments
+	// TODO: Add grunt/gulp to the project
+	(function ($) {
+
+		var timer = null;
+
+		$.fn.al = function (options) {
+
+			// Define defaults
+			var defaults = {
+				context: "default",
+				text: {
+					title: "TITLE",
+					description: "DESCRIPTION",
+					dismiss: "DISMISS"
+				},
+				classes: {
+					container: "",
+					panel: "",
+					title: "",
+					description: "",
+					hr: "",
+					dismiss: ""
+				},
+				seconds: "infinite",
+				redirect: ""
+			};
+
+			// Build settings, merging defaults and options
+			var settings = $.extend(true, {}, defaults, options);
+
+			// Build the alBoxPanel
+			var html = '<div id="alBox-panel" class="alBox-panel-' + settings.context + ' ' + settings.classes.panel + '">';
+			html += '<span id="alBox-title" class="' + settings.classes.title + '">' + settings.text.title + '</span>';
+			html += '<span id="alBox-description" class="' + settings.classes.description + '">' + settings.text.description + '</span>';
+			html += '<hr class="' + settings.classes.hr + '"/>';
+			html += '<button id="alBox-dismiss" class="' + settings.classes.dismiss + '">' + settings.text.dismiss + '</button>';
+			html += '</div>';
+
+			// Place into DOM
+			this.html(html);
+
+			if (settings.classes.container != "") {
+				$("#alBox").addClass(settings.classes.container);
+			}
+
+			// Add the click handler for the dismiss button
+			$("#alBox-dismiss").click(clearAl);
+
+			// Click handler for clicking outside the prompt box
+			$("#alBox").click(dismiss);
+
+			// Fade in the alert box
+			this.fadeIn();
+
+			// If seconds isn't "infinite" set a timer to clear the box
+			if (settings.seconds !== "infinite") {
+				timer = setInterval(function () {
+					clearTimeout(timer);
+					clearAl();
+					timer = null;
+				}, settings.seconds * 1000);
+			}
+
+			// Preserve chaining
+			return this;
+		};
+
+		/**
+		 * Dismiss only if the panel, title, description not part of the click event
+		 * @param e: event
+		 */
+		function dismiss(e) {
+			e.preventDefault();
+			if (!$(e.target).is('#alBox-panel')
+				&& !$(e.target).is('#alBox-title')
+				&& !$(e.target).is('#alBox-description')) {
+
+				// Clear the alert box
+				clearAl();
+			}
+		}
+
+		/**
+		 * Function that will clear the interval, fade the alert out
+		 * and remove the HTML structure from the container
+		 */
+		function clearAl() {
+			clearInterval(timer);
+			$("#alBox").fadeOut();
+			$("#alBox").html('');
+
+		}
+
+	}(jQuery));
+}
+
+
+
+
+
+
+
+/**
+ * Module for displaying "Waiting for..." dialog using Bootstrap
+ *
+ * @author Eugene Maslovich <ehpc@em42.ru>
+ */
+
+var waitingDialog = waitingDialog || (function ($) {
+	'use strict';
+
+	// Creating modal dialog's DOM
+	var $dialog = $(
+		'<div class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-hidden="true" style="padding-top:15%; overflow-y:visible;">' +
+		'<div class="modal-dialog modal-m">' +
+		'<div class="modal-content">' +
+			'<div class="modal-header"><h3 style="margin:0;"></h3></div>' +
+			'<div class="modal-body">' +
+				'<div class="progress progress-striped active" style="margin-bottom:0;"><div class="progress-bar" style="width: 100%"></div></div>' +
+			'</div>' +
+		'</div></div></div>');
+
+	return {
+		/**
+		 * Opens our dialog
+		 * @param message Custom message
+		 * @param options Custom options:
+		 * 				  options.dialogSize - bootstrap postfix for dialog size, e.g. "sm", "m";
+		 * 				  options.progressType - bootstrap postfix for progress bar type, e.g. "success", "warning".
+		 */
+		show: function (message, options) {
+			// Assigning defaults
+			if (typeof options === 'undefined') {
+				options = {};
+			}
+			if (typeof message === 'undefined') {
+				message = 'Loading';
+			}
+			var settings = $.extend({
+				dialogSize: 'm',
+				progressType: '',
+				onHide: null // This callback runs after the dialog was hidden
+			}, options);
+
+			// Configuring dialog
+			$dialog.find('.modal-dialog').attr('class', 'modal-dialog').addClass('modal-' + settings.dialogSize);
+			$dialog.find('.progress-bar').attr('class', 'progress-bar');
+			if (settings.progressType) {
+				$dialog.find('.progress-bar').addClass('progress-bar-' + settings.progressType);
+			}
+			$dialog.find('h3').text(message);
+			// Adding callbacks
+			if (typeof settings.onHide === 'function') {
+				$dialog.off('hidden.bs.modal').on('hidden.bs.modal', function (e) {
+					settings.onHide.call($dialog);
+				});
+			}
+			// Opening dialog
+			$dialog.modal();
+		},
+		/**
+		 * Closes dialog
+		 */
+		hide: function () {
+			$dialog.modal('hide');
+		}
+	};
+
+})(jQuery);

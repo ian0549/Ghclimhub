@@ -39,6 +39,8 @@ def about(request):
 	return render(  request, 'app/about.html' )
 
 def calcdata(request):
+
+	
 	global data,palettedecide
 	if(request.method=="POST"):
 		options= _ReadOptions(request)
@@ -51,9 +53,9 @@ def calcdata(request):
 			palettedecide='NDWI'
 		palete=palletedata(palettedecide,None)
 		data=_Getcollection(options,palete)
-		
-		
 	return JsonResponse(data)
+		
+	
 
 
 def indices_compute(request):
@@ -64,17 +66,26 @@ def indices_compute(request):
 	return JsonResponse(data)
 
 
+def indices_download(request):
+	global data
+	if(request.method=="POST"):
+		options= _ReadOptions(request)
+		data=indices(options)		
+	return JsonResponse(data)
 
 
 
 def timeseries(request):
 	global data
 	if(request.method=="POST"):
-		options= Options(request)
-		print(options)
-	
+		try:
+			options= Options(request)
+			print(options)
+			data=timelapse_data(options) 
+		except  ee.EEException as ex:
+			data={'error':'Failed to Compute Time Series . Error Stated::, '+str(ex)}
+			pass
 		
-		data=timelapse_data(options) 
 
 		
 	return JsonResponse(data)
@@ -86,29 +97,15 @@ def map1(request):
 	global data
 	if(request.method=="POST"):
 		options= _ReadOptions(request)
-		
-		try:
-			data=indices(options)
-		except ee.EEException as ex :
-			data={'error':'Failed to Compute Data . Error Stated, '+str(ex)}
-			print(data)
-			pass
-		
-		
+		data=indices(options)
+
 	return JsonResponse(data)
 
 def map2(request):
 	global data
 	if(request.method=="POST"):
 		options= _ReadOptions(request)
-		
-		try:
-			data=indices(options)
-		except ee.EEException as ex :
-			data={'error':'Failed to Compute Data . Error Stated, '+str(ex)}
-			print(data)
-			pass
-		
+		data=indices(options)
 		
 	return JsonResponse(data)
 
@@ -118,14 +115,7 @@ def map3(request):
 	if(request.method=="POST"):
 		options= _ReadOptions(request)
 		
-		try:
-			data=indices(options)
-		except ee.EEException as ex :
-			data={'error':'Failed to Compute Data . Error Stated, '+str(ex)}
-			print(data)
-			pass
-		
-		
+		data=indices(options)	
 	return JsonResponse(data)
 
 
@@ -134,68 +124,50 @@ def map4(request):
 	global data
 	if(request.method=="POST"):
 		options= _ReadOptions(request)
-		
-		try:
-			data=indices(options)
-		except ee.EEException as ex :
-			data={'error':'Failed to Compute Data . Error Stated, '+str(ex)}
-			print(data)
-			pass
-		
-		
+		data=indices(options)	
 	return JsonResponse(data)
 
 
 
 
 def download_data(request):
-	global data,palettedecide
-	if(request.method=="POST"):
-		options= _ReadOptions(request)
-		print(options)
-		if options["dataset"]=='NDVI':
-			palettedecide='NDVI'
-		elif options["dataset"]=='EVI':
-			palettedecide='EVI'
-		elif options["dataset"]=='NDWI':
-			palettedecide='NDWI'
-		palete=palletedata(palettedecide,None)
-		data= _Getcollection(options,palete)
-		
-		
-	return JsonResponse(data)
-
-
-
-
-def chart_data(request):
-	global data,palettedecide
-	if(request.method=="POST"):
-		options= _ReadOptions(request)
-		print(options)
-		if options["dataset"]=='NDVI':
-			palettedecide='NDVI'
-		elif options["dataset"]=='EVI':
-			palettedecide='EVI'
-		elif options["dataset"]=='NDWI':
-			palettedecide='NDWI'
-		palete=palletedata(palettedecide,None)
-		data= chart_it(options,palete)
-		
-		
-	return JsonResponse(data)
-
-
-
-def update_palette(request):
-		global data
+	try:
+		global data,palettedecide
 		if(request.method=="POST"):
 			options= _ReadOptions(request)
-			print(options)
-			palete=options["palette"]
-			palette=palete.replace('"', "")
-			data= _Getcollection(options, palletedata(None,palette))
-		return JsonResponse(data)
+			if options["dataset"]=='NDVI':
+				palettedecide='NDVI'
+			elif options["dataset"]=='EVI':
+				palettedecide='EVI'
+			elif options["dataset"]=='NDWI':
+				palettedecide='NDWI'
+			palete=palletedata(palettedecide,None)
+			data= _Getcollection(options,palete)
+
+	except ee.EEException as e:
+			data={'error':'Failed to Download Data . Error Stated::, '+str(e)}	
+	return JsonResponse(data)	
+
+def chart_data(request):
+	try:
+		global data,palettedecide
+		if(request.method=="POST"):
+			options= _ReadOptions(request)
+			if options["dataset"]=='NDVI':
+				palettedecide='NDVI'
+			elif options["dataset"]=='EVI':
+				palettedecide='EVI'
+			elif options["dataset"]=='NDWI':
+				palettedecide='NDWI'
+			palete=palletedata(palettedecide,None)
+			data= chart_it(options,palete)
+
+		
+	except ee.EEException as e:
+			data={'error':'Failed to Compute  Data . Error Stated::, '+str(e)}
+	return JsonResponse(data)
+		
+
 
 
 
