@@ -29,8 +29,6 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <!-- font-awesome-icons -->
 <link href=" ../../static/app/content/font-awesome.css" rel="stylesheet"> 
 <!-- //font-awesome-icons -->
-<link href="//fonts.googleapis.com/css?family=Dosis:200,300,400,500,600,700,800&amp;subset=latin-ext" rel="stylesheet">
-<link href='//fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic' rel='stylesheet' type='text/css'>
 </head>
 	
 <body>
@@ -238,12 +236,14 @@ iancecilakoto@gmail.com</p> </p>
 					<input type="submit" value="">
 				</form>
 				<ul class="w3l_footer_nav">
-					<li><a href="index.html">Home</a></li>
-					<li><a href="about.html">About Us</a></li>
-					<li><a href="dataset.html">Dataset</a></li>
+					<li><a href="{% url 'home'%}">Home</a></li>
+					<li><a href="{% url 'dataset'%}">Dataset</a></li>
 
-					<li><a href="compare.html">Drought Monitor</a></li>
-					<li><a href="mail.html">Mail Us</a></li>
+					<li><a href="{% url 'compare'%}">Drought Monitor</a></li>
+					<li><a href="{% url 'mail'%}">Mail Us</a></li>
+					<li><a href="{% url 'about'%}">About Us</a></li>
+					
+				
 				</ul>
 				
 			</div>

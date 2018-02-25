@@ -389,13 +389,14 @@ that deﬁne the risk of serious impacts, and is one of the main aspects of drou
 					<input type="submit" value="">
 				</form>
 				<ul class="w3l_footer_nav">
-					<li><a href="index.html">Home</a></li>
-					<li><a href="dataset.html">Dataset</a></li>
+					<li><a href="{% url 'home'%}">Home</a></li>
+					<li><a href="{% url 'dataset'%}">Dataset</a></li>
 
-					<li><a href="compare.html">Drought Monitor</a></li>
-					<li><a href="mail.html">Mail Us</a></li>
-					<li><a href="about.html">About Us</a></li>
+					<li><a href="{% url 'compare'%}">Drought Monitor</a></li>
+					<li><a href="{% url 'mail'%}">Mail Us</a></li>
+					<li><a href="{% url 'about'%}">About Us</a></li>
 					
+				
 				</ul>
 
 				

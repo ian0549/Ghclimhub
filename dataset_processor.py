@@ -229,12 +229,9 @@ def palletedata(palettechoice,palette):
   '#FFFF40','#FFFF67','#FFFF7B','#FFFF80','#FFFF8E','#FFFF93','#FFFFAD','#FFFFAF','#FFFFBF','#FFFFCF','#FFFFDF','#FFFFEF','#FFFFFC',
   '#FFFFFF' ])
 
-	palettendvi=','.join( ["87000A", "7C3E28", "EC712C", "FABF45", "FFFFFF", "51FF78", "3DCF4C", "215229"])
+	palettendvi=','.join( ['#a6cee3','#1f78b4','#b2df8a','#33a02c','#fb9a99','#e31a1c','#fdbf6f','#ff7f00'])
 	# A nice EVI palette.
-	paletteevi =','.join( [
-  'FFFFFF', 'CE7E45', 'DF923D', 'F1B555', 'FCD163', '99B718',
-  '74A901', '66A000', '529400', '3E8601', '207401', '056201',
-  '004C00', '023B01', '012E01', '011D01', '011301'])
+	paletteevi =','.join( ['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628','#f781bf'])
 	
 	if palettechoice is None and palette is not None:
 		ndwiViz = palette

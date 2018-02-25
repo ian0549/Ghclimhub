@@ -2,8 +2,13 @@
 
 
 $(document).ready(function () {
-	$("#legend").hide();
-	});
+	$('#md1').find('a').trigger('click');
+});
+
+
+
+
+
 var palete = {
 	'ndvi_anomaly': ["87000A", "7C3E28", "EC712C", "FABF45", "FFFFFF", "51FF78", "3DCF4C", "215229"], 'ndwi_anomaly': ["#e20000 ", "32cd32", "ffff00", "ff8c00", "#00f9f9", "#3570dd", "0000ff"], 'vhi': ['#087702', '#52f904', '#ffee00', '#ff7700', '#ef0404'], 'smi': ['#730000', '#E60000', '#FFAA00', '#FCD37F', '#FFFF00', '#FFFFFF', '#AAFF55', '#00FFFF', '#00AAFF', '#0000FF', '#0000AA'], 'lst': ["0000ff", "32cd32", "ffff00", "ff8c00", "#e20000 "], 'precipitation': ['#730000', '#E60000', '#FFAA00', '#FCD37F', '#FFFF00', '#FFFFFF', '#AAFF55', '#00FFFF', '#00AAFF', '#0000FF', '#0000AA'], 'spi': ['#730000', '#E60000', '#FFAA00', '#FCD37F', '#FFFF00', '#FFFFFF', '#AAFF55', '#00FFFF', '#00AAFF', '#0000FF', '#0000AA']
 }
@@ -1066,9 +1071,8 @@ $(document).on('submit', '#indices_compute_form', function (e) {
 				url: '/indices_compute',
 				dataType: 'json',
 				success: function (data) {
-					
 					if (data.mapid!=null) {
-
+						map.controls[google.maps.ControlPosition.LEFT_BOTTOM].clear()
 						if (shapepoly != null) {
 							clearPolygon(shapepoly);
 						}
@@ -1137,18 +1141,17 @@ $(document).on('submit', '#indices_compute_form', function (e) {
 
 
 
-
-
 						
 
+						var legend = document.createElement('div');
+						legend.id = 'legend';
+						legend.className = "leg"
+						legend.setAttribute("style","	border-radius: 5px;background: white;padding: 5px;margin: 10px;z-index:1;width:220px;height:300px;transition: all 0.5s ease  0.5s !important;")
 
-						// Create the legend and display on the map
-						var legend = document.getElementById('legend');
-						$("#legend").show();
+		
 
-						colorlegend("#legend", qScale, "quantile", data.type, { title: "", boxHeight: 60, boxWidth: 65 });
-						legend.index = 1;
-						legend.style.bottom = "27px";
+						colorlegend("#legend",legend, qScale, "quantile", data.type, { title: "", boxHeight: 60, boxWidth: 65 });
+						legend.index =1;
 						map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(legend);
 
 
@@ -1277,7 +1280,7 @@ $(document).on('submit', '#indices_series_form1', function (e) {
 		},
 		success: function () {
 			map1.overlayMapTypes.clear();
-
+			map1.controls[google.maps.ControlPosition.LEFT_BOTTOM].clear()
 			$.ajax({
 				method: "GET",
 				url: '/map1',
@@ -1321,40 +1324,32 @@ $(document).on('submit', '#indices_series_form1', function (e) {
 						if (data.type == 'ndvi_anomaly') {
 							redBlueScale = palete.ndvi_anomaly
 							qScale = d3.scale.quantile()
-								.domain([Math.ceil(data.min), Math.ceil(data.max)])
 								.range(redBlueScale);
 						} else if (data.type == 'ndwi_anomaly') {
 							redBlueScale = palete.ndwi_anomaly
 							qScale = d3.scale.quantile()
-								.domain([Math.ceil(data.min), Math.ceil(data.max)])
 								.range(redBlueScale);
 						} else if (data.type == 'precipitation') {
 
 							redBlueScale = palete.precipitation
-							console.log(redBlueScale)
 							qScale = d3.scale.quantile()
-								.domain([Math.ceil(data.min), Math.ceil(data.max)])
 								.range(redBlueScale);
 
 						} else if (data.type == 'lst') {
 							redBlueScale = palete.lst
 							qScale = d3.scale.quantile()
-								.domain([Math.ceil(data.min), Math.ceil(data.max)])
 								.range(redBlueScale);
 						} else if (data.type == 'smi') {
 							redBlueScale = palete.smi
 							qScale = d3.scale.quantile()
-								.domain([Math.ceil(data.min), Math.ceil(data.max)])
 								.range(redBlueScale);
 						} else if (data.type == 'vhi') {
 							redBlueScale = palete.vhi
 							qScale = d3.scale.quantile()
-								.domain([Math.ceil(data.min), Math.ceil(data.max)])
 								.range(redBlueScale);
 						} else if (data.type == 'spi') {
 							redBlueScale = palete.spi
 							qScale = d3.scale.quantile()
-								.domain([Math.ceil(data.min), Math.ceil(data.max)])
 								.range(redBlueScale);
 						}
 
@@ -1366,13 +1361,17 @@ $(document).on('submit', '#indices_series_form1', function (e) {
 
 
 
-						// Create the legend and display on the map
-						var legend = document.getElementById('legend');
-						$("#legend").show();
 
-						colorlegend("#legend", qScale, "quantile", { title: data.note, boxHeight: 45, boxWidth: 65 });
+						var legend = document.createElement('div');
+						legend.id = 'legend';
+						legend.className = "leg"
+						legend.setAttribute("style", "	border-radius: 5px;background: white;padding: 5px;margin: 10px;z-index:1;width:220px;height:300px;transition: all 0.5s ease  0.5s !important;")
+
+
+
+						colorlegend("#legend", legend, qScale, "quantile", data.type, { title: "", boxHeight: 60, boxWidth: 65 });
 						legend.index = 1;
-						legend.style.bottom = "27px";
+			
 						map1.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(legend);
 
 
@@ -1505,7 +1504,7 @@ $(document).on('submit', '#indices_series_form2', function (e) {
 		},
 		success: function () {
 			map2.overlayMapTypes.clear();
-
+			map2.controls[google.maps.ControlPosition.LEFT_BOTTOM].clear()
 			$.ajax({
 				method: "GET",
 				url: '/map2',
@@ -1594,13 +1593,15 @@ $(document).on('submit', '#indices_series_form2', function (e) {
 
 
 
-						// Create the legend and display on the map
-						var legend = document.getElementById('legend');
-						$("#legend").show();
+						var legend = document.createElement('div');
+						legend.id = 'legend';
+						legend.className = "leg"
+						legend.setAttribute("style", "	border-radius: 5px;background: white;padding: 5px;margin: 10px;z-index:1;width:220px;height:300px;transition: all 0.5s ease  0.5s !important;")
 
-						colorlegend("#legend", qScale, "quantile", { title: data.note, boxHeight: 45, boxWidth: 65 });
+
+
+						colorlegend("#legend", legend, qScale, "quantile", data.type, { title: "", boxHeight: 60, boxWidth: 65 });
 						legend.index = 1;
-						legend.style.bottom = "27px";
 						map2.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(legend);
 
 
@@ -1730,7 +1731,7 @@ $(document).on('submit', '#indices_series_form3', function (e) {
 		},
 		success: function () {
 			map3.overlayMapTypes.clear();
-
+			map3.controls[google.maps.ControlPosition.LEFT_BOTTOM].clear()
 			$.ajax({
 				method: "GET",
 				url: '/map3',
@@ -1774,40 +1775,33 @@ $(document).on('submit', '#indices_series_form3', function (e) {
 						if (data.type == 'ndvi_anomaly') {
 							redBlueScale = palete.ndvi_anomaly
 							qScale = d3.scale.quantile()
-								.domain([Math.ceil(data.min), Math.ceil(data.max)])
 								.range(redBlueScale);
 						} else if (data.type == 'ndwi_anomaly') {
 							redBlueScale = palete.ndwi_anomaly
 							qScale = d3.scale.quantile()
-								.domain([Math.ceil(data.min), Math.ceil(data.max)])
 								.range(redBlueScale);
 						} else if (data.type == 'precipitation') {
 
 							redBlueScale = palete.precipitation
 							console.log(redBlueScale)
 							qScale = d3.scale.quantile()
-								.domain([Math.ceil(data.min), Math.ceil(data.max)])
 								.range(redBlueScale);
 
 						} else if (data.type == 'lst') {
 							redBlueScale = palete.lst
 							qScale = d3.scale.quantile()
-								.domain([Math.ceil(data.min), Math.ceil(data.max)])
 								.range(redBlueScale);
 						} else if (data.type == 'smi') {
 							redBlueScale = palete.smi
 							qScale = d3.scale.quantile()
-								.domain([Math.ceil(data.min), Math.ceil(data.max)])
 								.range(redBlueScale);
 						} else if (data.type == 'vhi') {
 							redBlueScale = palete.vhi
 							qScale = d3.scale.quantile()
-								.domain([Math.ceil(data.min), Math.ceil(data.max)])
 								.range(redBlueScale);
 						} else if (data.type == 'spi') {
 							redBlueScale = palete.spi
 							qScale = d3.scale.quantile()
-								.domain([Math.ceil(data.min), Math.ceil(data.max)])
 								.range(redBlueScale);
 						}
 
@@ -1819,13 +1813,15 @@ $(document).on('submit', '#indices_series_form3', function (e) {
 
 
 
-						// Create the legend and display on the map
-						var legend = document.getElementById('legend');
-						$("#legend").show();
+						var legend = document.createElement('div');
+						legend.id = 'legend';
+						legend.className = "leg"
+						legend.setAttribute("style", "	border-radius: 5px;background: white;padding: 5px;margin: 10px;z-index:1;width:220px;height:300px;transition: all 0.5s ease  0.5s !important;")
 
-						colorlegend("#legend", qScale, "quantile", { title: data.note, boxHeight: 45, boxWidth: 65 });
+
+
+						colorlegend("#legend", legend, qScale, "quantile", data.type, { title: "", boxHeight: 60, boxWidth: 65 });
 						legend.index = 1;
-						legend.style.bottom = "27px";
 						map3.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(legend);
 
 
@@ -1959,7 +1955,7 @@ $(document).on('submit', '#indices_series_form4', function (e) {
 		},
 		success: function () {
 			map4.overlayMapTypes.clear();
-
+			map4.controls[google.maps.ControlPosition.LEFT_BOTTOM].clear()
 			$.ajax({
 				method: "GET",
 				url: '/map4',
@@ -2003,40 +1999,32 @@ $(document).on('submit', '#indices_series_form4', function (e) {
 						if (data.type == 'ndvi_anomaly') {
 							redBlueScale = palete.ndvi_anomaly
 							qScale = d3.scale.quantile()
-								.domain([Math.ceil(data.min), Math.ceil(data.max)])
 								.range(redBlueScale);
 						} else if (data.type == 'ndwi_anomaly') {
 							redBlueScale = palete.ndwi_anomaly
 							qScale = d3.scale.quantile()
-								.domain([Math.ceil(data.min), Math.ceil(data.max)])
 								.range(redBlueScale);
 						} else if (data.type == 'precipitation') {
 
 							redBlueScale = palete.precipitation
-							console.log(redBlueScale)
 							qScale = d3.scale.quantile()
-								.domain([Math.ceil(data.min), Math.ceil(data.max)])
 								.range(redBlueScale);
 
 						} else if (data.type == 'lst') {
 							redBlueScale = palete.lst
 							qScale = d3.scale.quantile()
-								.domain([Math.ceil(data.min), Math.ceil(data.max)])
 								.range(redBlueScale);
 						} else if (data.type == 'smi') {
 							redBlueScale = palete.smi
 							qScale = d3.scale.quantile()
-								.domain([Math.ceil(data.min), Math.ceil(data.max)])
 								.range(redBlueScale);
 						} else if (data.type == 'vhi') {
 							redBlueScale = palete.vhi
 							qScale = d3.scale.quantile()
-								.domain([Math.ceil(data.min), Math.ceil(data.max)])
 								.range(redBlueScale);
 						} else if (data.type == 'spi') {
 							redBlueScale = palete.spi
 							qScale = d3.scale.quantile()
-								.domain([Math.ceil(data.min), Math.ceil(data.max)])
 								.range(redBlueScale);
 						}
 
@@ -2048,13 +2036,15 @@ $(document).on('submit', '#indices_series_form4', function (e) {
 
 
 
-						// Create the legend and display on the map
-						var legend = document.getElementById('legend');
-						$("#legend").show();
+						var legend = document.createElement('div');
+						legend.id = 'legend';
+						legend.className = "leg"
+						legend.setAttribute("style", "	border-radius: 5px;background: white;padding: 5px;margin: 10px;z-index:1;width:220px;height:300px;transition: all 0.5s ease  0.5s !important;")
 
-						colorlegend("#legend", qScale, "quantile", { title: data.note, boxHeight: 45, boxWidth: 65 });
+
+
+						colorlegend("#legend", legend, qScale, "quantile", data.type, { title: "", boxHeight: 60, boxWidth: 65 });
 						legend.index = 1;
-						legend.style.bottom = "27px";
 						map4.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(legend);
 
 

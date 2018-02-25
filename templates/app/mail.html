@@ -11,21 +11,23 @@ author: Akoto Ian
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="keywords" content="Viticulture Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template, 
 Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyEricsson, Motorola web design" />
-<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false);
-		function hideURLbar(){ window.scrollTo(0,1); } </script>
-<!-- //custom-theme -->
-<link href="../../static/app/content/style.css" rel="stylesheet" />
-<link href="../../static/app/content/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
 
+<!-- //custom-theme -->
+
+
+
+
+<link href=" ../../static/app/content/style.css" rel="stylesheet" />
+<link href=" ../../static/app/content/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
+<link href=" ../../static/app/content/style.css" rel="stylesheet" type="text/css" media="all" />
 <!-- js -->
+
 <script type="text/javascript" src="../../static/app/scripts/jquery-2.1.4.min.js"></script>
 <!-- //js -->
 <link rel="stylesheet" href="../../static/app/content/colorbox.css" />
-<!-- font-awesome-icons -->
-<link href="../../static/app/content/font-awesome.css" rel="stylesheet"> 
-<!-- //font-awesome-icons -->
-<link href="//fonts.googleapis.com/css?family=Dosis:200,300,400,500,600,700,800&amp;subset=latin-ext" rel="stylesheet">
-<link href='//fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic' rel='stylesheet' type='text/css'>
+
+
+
 </head>
 	
 <body>
@@ -167,12 +169,12 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 					<input type="submit" value="">
 				</form>
 				<ul class="w3l_footer_nav">
-					<li><a href="index.html">Home</a></li>
-					<li><a href="dataset.html">Dataset</a></li>
+					<li><a href="{% url 'home'%}">Home</a></li>
+					<li><a href="{% url 'dataset'%}">Dataset</a></li>
 
-					<li><a href="compare.html">Drought Monitor</a></li>
-					<li><a href="mail.html">Mail Us</a></li>
-					<li><a href="about.html">About Us</a></li>
+					<li><a href="{% url 'compare'%}">Drought Monitor</a></li>
+					<li><a href="{% url 'mail'%}">Mail Us</a></li>
+					<li><a href="{% url 'about'%}">About Us</a></li>
 					
 				
 				</ul>
@@ -191,6 +193,9 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <!-- start-smoth-scrolling -->
 <script type="text/javascript" src="../../static/app/scripts/move-top.js"></script>
 <script type="text/javascript" src="../../static/app/scripts/easing.js"></script>
+
+	
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
 <script type="text/javascript">
 	jQuery(document).ready(function($) {
 		$(".scroll").click(function(event){		

@@ -305,7 +305,9 @@ var styles = {
 	]
 };
 
-
+var palete = {
+	'ndvi': ['#a6cee3', '#1f78b4', '#b2df8a', '#33a02c', '#fb9a99', '#e31a1c', '#fdbf6f', '#ff7f00'], 'ndwi': ["#e20000 ", "32cd32", "ffff00", "ff8c00", "#00f9f9", "#3570dd", "0000ff"], 'evi': ['#e41a1c', '#377eb8', '#4daf4a', '#984ea3', '#ff7f00', '#ffff33', '#a65628', '#f781bf']
+}
 
 
 
@@ -711,7 +713,7 @@ var marker_point;
 
 $('#marker_decide').click(function (event) {
 
-
+	$('#chart_submit').prop('disabled', false);
 	var marker = new google.maps.Marker({
 		position: Ghana,
 		draggable: true,
@@ -1175,7 +1177,7 @@ $(document).on('submit', '#user_form', function (e) {
 				url: '/calc_data',
 				dataType: 'json',
 				success: function (data) {
-
+					map.controls[google.maps.ControlPosition.LEFT_BOTTOM].clear()
 					if (data.error == null) {
 
 
@@ -1216,6 +1218,46 @@ $(document).on('submit', '#user_form', function (e) {
 						//Add opacity slider on map
 						put_sliderOnMap();
 						map.controls[google.maps.ControlPosition.RIGHT_TOP].push(opacity_slider);
+
+						var eventTypeName = $("#dataset option:selected").val();
+						var storeName = eventTypeName.replace(/'/g, '\\\'');
+
+
+						var redBlueScale;
+
+						var qScale;
+
+						if (storeName == "NDVI") {
+							redBlueScale = palete.ndvi
+							qScale = d3.scale.quantile()
+								.range(redBlueScale);
+
+						} else if (storeName == "NDWI") {
+							redBlueScale = palete.ndwi
+							qScale = d3.scale.quantile()
+								.range(redBlueScale);
+
+						} else if (storeName == "EVI") {
+
+							redBlueScale = palete.evi
+							qScale = d3.scale.quantile()
+								.range(redBlueScale);
+
+
+						}
+
+						var legend = document.createElement('div');
+						legend.id = 'legend';
+						legend.className = "leg"
+						legend.setAttribute("style", "	border-radius: 5px;background: white;padding: 5px;margin: 10px;z-index:1;width:220px;height:300px;transition: all 0.5s ease  0.5s !important;")
+
+
+
+						colorlegend("#legend", legend, qScale, "quantile", storeName, { title: "", boxHeight: 60, boxWidth: 65 });
+						legend.index = 1;
+						map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(legend);
+
+
 
 						waitingDialog.hide();
 
@@ -1477,7 +1519,7 @@ $(document).on('submit', '#chart_form', function (e) {
 				success: function (data) {
 					waitingDialog.hide();
 					if (data.error == null) {
-						
+						$('#graphDropdown').click();
 
 
 						if (layer != null) {
@@ -1491,7 +1533,7 @@ $(document).on('submit', '#chart_form', function (e) {
 
 						clearMarkers();
 
-						$('#graphDropdown').click();
+			
 						graph = data.timeSeriesData[0]['Data']
 
 						time_d = [];

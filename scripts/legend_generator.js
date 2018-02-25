@@ -1,4 +1,4 @@
-﻿var colorlegend = function (target, scale, type,indices, options) {
+﻿var colorlegend = function (target,act ,scale, type,indices, options) {
 	var scaleTypes = ['linear', 'quantile', 'ordinal']
 		, found = false
 		, opts = options || {}
@@ -7,16 +7,17 @@
 		, title = opts.title || null            // draw title (string)
 		, fill = opts.fill || false             // fill the element (boolean)
 		, linearBoxes = opts.linearBoxes || 9   // number of boxes for linear scales (int)
-		, htmlElement = document.getElementById(target.substring(0, 1) === '#' ? target.substring(1, target.length) : target)  // target container element - strip the prefix #
+		, htmlElement = act
+		console.log(htmlElement)// target container element - strip the prefix #
 
-		, w = htmlElement.offsetWidth           // width of container element
-
-		, h = htmlElement.offsetHeight          // height of container element
+		, w = 220          // width of container element
+		console.log(w)
+		, h =300       // height of container element
 		, colors = []
 		, padding = [2, 4, 10, 4]               // top, right, bottom, left
 		, boxSpacing = type === 'ordinal' ? 3 : 3 // spacing between boxes
 		, titlePadding = title ? 11 : 1
-		, domain = (indices == "lst") ? ['Very Low', 'Low', 'Moderate', 'Hot', 'Very Hot'] : (indices == "vhi") ? ['Wet', 'No Drought/Normal', 'Moderate Drought', 'Severe Drought', 'Extreme Drought'] : (indices == "precipitation") ? ['Exceptional Less', 'Extremely Less', 'Severely Less', 'Moderately Less', 'Abnormally Less', 'Neutral', 'Abnormally Rainy', 'Moderately Rainy', 'Severely Rainy', 'Extremely Rainy', 'Exceptionally Rainy'] : (indices == "ndwi_anomaly") ? ['Extremely Dry', 'Severely Dry', 'Moderately Dry', 'Near Normal','Normal' , 'Moderately Wet', 'Very Wet', 'Extremely Wet'] : (indices == "ndvi_anomaly") ? ['Extremely Dry', 'Severely Dry', 'Moderately Dry', 'Near Normal', 'Moderately Wet', 'Very Wet', 'Extremely Wet'] : (indices == "spi") ? ['Exceptional Dry', 'Extremely Dry', 'Severely Dry', 'Moderately Dry', 'Abnormally Dry', 'Neutral', 'Abnormally Wet', 'Moderately Wet', 'Severely Wet', 'Extremely Wet', 'Exceptionally Wet'] : (indices == "smi") ? ['Exceptional Dry', 'Extremely Dry', 'Severely Dry', 'Moderately Dry', 'Abnormally Dry', 'Neutral', 'Abnormally Wet', 'Moderately Wet', 'Severely Wet', 'Extremely Wet', 'Exceptionally Wet'] : [""]
+		, domain = (indices === "lst") ? ['Very Low', 'Low', 'Moderate', 'Hot', 'Very Hot'] : (indices === "vhi") ? ['Wet', 'No Drought/Normal', 'Moderate Drought', 'Severe Drought', 'Extreme Drought'] : (indices === "precipitation") ? ['Exceptional Less', 'Extremely Less', 'Severely Less', 'Moderately Less', 'Abnormally Less', 'Neutral', 'Abnormally Rainy', 'Moderately Rainy', 'Severely Rainy', 'Extremely Rainy', 'Exceptionally Rainy'] : (indices === "ndwi_anomaly") ? ['Extremely Dry', 'Severely Dry', 'Moderately Dry', 'Near Normal', 'Normal', 'Moderately Wet', 'Very Wet', 'Extremely Wet'] : (indices === "ndvi_anomaly") ? ['Extremely Dry', 'Severely Dry', 'Moderately Dry', 'Near Normal', 'Moderately Wet', 'Very Wet', 'Extremely Wet'] : (indices === "spi") ? ['Exceptional Dry', 'Extremely Dry', 'Severely Dry', 'Moderately Dry', 'Abnormally Dry', 'Neutral', 'Abnormally Wet', 'Moderately Wet', 'Severely Wet', 'Extremely Wet', 'Exceptionally Wet'] : (indices === "smi") ? ['Exceptional Dry', 'Extremely Dry', 'Severely Dry', 'Moderately Dry', 'Abnormally Dry', 'Neutral', 'Abnormally Wet', 'Moderately Wet', 'Severely Wet', 'Extremely Wet', 'Exceptionally Wet'] : (indices === "NDVI") ? ["Extremely Low", "Very Low", "Low", "Near Normal", "Normal", "High", "Very High", "Extremely High"] : (indices === "NDWI") ? ['Extremely Low', 'Severely Low', 'Moderately Low', 'Near Normal', 'Normal', 'Moderately High', 'Very High', 'Extremely High'] : (indices === "EVI") ? ["Extremely Low", "Very Low", "Low", "Near Normal", "Normal", "High", "Very High", "Extremely High"] : [""]
 		
 		, range = scale.range()
 		, i = 0
@@ -70,8 +71,12 @@
 	}
 
 
+
+
+
 	// set up the legend graphics context
-	var legend = d3.select(target)
+	var legend = d3.select(htmlElement)
+		
 		.append('svg')
 		.attr('width', w)
 		.attr('height', h)
@@ -84,7 +89,7 @@
 	var legendBoxes = legend.selectAll('g.legend')
 		.data(colors)
 		.enter().append('g');
-
+	console.log(legend)
 	// value labels
 	var valueLabels;
 	if (!isVertical) {

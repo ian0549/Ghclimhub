@@ -33,8 +33,8 @@ $('#datasource_spi').change(function () {
 	if (eventTypeName.is('[name="spi"]')) {
 		$('#indices_discription').text("The index is a standardized measure for precipitation in different climatic regions and for seasonal differences.  It allows an analyst to determine the rarity of a drought at a given time scale (temporal resolution) of interest for any rainfall station with historic data");
 
-		$("#satelite").show('slow');
-		$("#stext").show('slow');
+		$("#satelite").hide('slow');
+		$("#stext").hide('slow');
 	}
 
 	if (eventTypeName.is('[name="lst"]')) {
